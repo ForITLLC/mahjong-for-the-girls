@@ -1,23 +1,13 @@
 /** @type {import('next').NextConfig} */
 
-// Two deploy shapes from one config:
-//  - default            → output:'standalone' (Azure App Service / any Node host, ForIT convention)
-//  - DEPLOY_TARGET=pages → static export to ./out for GitHub Pages (project subpath)
-const isPages = process.env.DEPLOY_TARGET === 'pages';
-const repo = 'mahjong-for-the-girls';
-
-const nextConfig = isPages
-  ? {
-      output: 'export',
-      images: { unoptimized: true },
-      basePath: `/${repo}`,
-      assetPrefix: `/${repo}/`,
-      trailingSlash: true,
-      reactStrictMode: true,
-    }
-  : {
-      output: 'standalone',
-      reactStrictMode: true,
-    };
+// Static export for Azure Static Web Apps — the ForIT client-site convention
+// (mirrors for-site-template and cay-Website / cayres.ca). SWA serves the
+// exported ./out at the site root, so there is no basePath.
+const nextConfig = {
+  output: 'export',
+  images: { unoptimized: true },
+  trailingSlash: true,
+  reactStrictMode: true,
+};
 
 module.exports = nextConfig;
