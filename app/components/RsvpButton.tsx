@@ -1,18 +1,22 @@
 'use client';
 
 import type { MahjongEvent } from '../data/events';
-import { buildMailto } from '../lib/email';
 
-// Client-only RSVP action: the mailto is assembled at click time from the
-// decoded address, so no email address is baked into the static HTML.
+// RSVP funnels into the on-page contact form rather than opening a mailto:
+// — a mailto would surface Caroline's address in the visitor's mail client.
+// We dispatch a prefill event the Contact form listens for, then smooth-scroll
+// down to it so the visitor lands on a message that's already filled in.
 export default function RsvpButton({ ev }: { ev: MahjongEvent }) {
   const soldOut = ev.status === 'sold-out';
 
   const onClick = () => {
-    const subject = `RSVP — ${ev.title}`;
-    const body = `Hi,\n\nI'd love a seat at "${ev.title}" on ${ev.date} (${ev.time}) at ${ev.venue}, ${ev.neighborhood}.\n\nName:\nBrought a friend?:\n\nThanks!`;
-    const href = buildMailto(subject, body);
-    if (href !== '#') window.location.href = href;
+    const message =
+      `I'd love a seat at "${ev.title}" on ${ev.date} (${ev.time}) ` +
+      `at ${ev.venue}, ${ev.neighborhood}.`;
+    window.dispatchEvent(
+      new CustomEvent('rsvp-prefill', { detail: { message } })
+    );
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

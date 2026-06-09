@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { site } from '../site.config';
 import { buildMailto } from '../lib/email';
 
@@ -12,6 +12,24 @@ export default function Contact() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+
+  // Calendar RSVP buttons dispatch 'rsvp-prefill' instead of opening a mailto.
+  // Drop their text into the message box and focus it once we've scrolled here.
+  useEffect(() => {
+    const onPrefill = (e: Event) => {
+      const detail = (e as CustomEvent<{ message?: string }>).detail;
+      if (!detail?.message) return;
+      setMessage(detail.message);
+      window.setTimeout(() => {
+        messageRef.current?.focus();
+        const len = messageRef.current?.value.length ?? 0;
+        messageRef.current?.setSelectionRange(len, len);
+      }, 500);
+    };
+    window.addEventListener('rsvp-prefill', onPrefill);
+    return () => window.removeEventListener('rsvp-prefill', onPrefill);
+  }, []);
 
   const mailto = () => {
     const subject = `Hello from ${name || 'a future regular'}`;
@@ -87,6 +105,7 @@ export default function Contact() {
               </label>
               <textarea
                 id="message"
+                ref={messageRef}
                 required
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
