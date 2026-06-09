@@ -8,7 +8,7 @@ export const site = {
   tagline: 'A table is waiting.',
   city: 'Seattle',
   // The contact form opens the visitor's mail app addressed here.
-  contactEmail: 'hello@mahjongforthegirls.com',
+  contactEmail: 'caroli.dudeck@gmail.com',
   instagram: 'https://instagram.com/', // TODO: drop in the real handle
   host: 'Caroline Dudeck',
 } as const;

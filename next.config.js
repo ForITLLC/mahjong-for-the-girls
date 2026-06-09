@@ -1,9 +1,23 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  // Standalone output keeps this portable to Azure App Service (ForIT convention)
-  // and to any static-friendly host. No server runtime is required by the site.
-  output: 'standalone',
-  reactStrictMode: true,
-};
+
+// Two deploy shapes from one config:
+//  - default            → output:'standalone' (Azure App Service / any Node host, ForIT convention)
+//  - DEPLOY_TARGET=pages → static export to ./out for GitHub Pages (project subpath)
+const isPages = process.env.DEPLOY_TARGET === 'pages';
+const repo = 'mahjong-for-the-girls';
+
+const nextConfig = isPages
+  ? {
+      output: 'export',
+      images: { unoptimized: true },
+      basePath: `/${repo}`,
+      assetPrefix: `/${repo}/`,
+      trailingSlash: true,
+      reactStrictMode: true,
+    }
+  : {
+      output: 'standalone',
+      reactStrictMode: true,
+    };
 
 module.exports = nextConfig;
