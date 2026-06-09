@@ -1,5 +1,5 @@
-import { events, type MahjongEvent, type EventStatus } from '../data/events';
-import { site } from '../site.config';
+import { events, type EventStatus } from '../data/events';
+import RsvpButton from './RsvpButton';
 
 const statusStyle: Record<EventStatus, { label: string; cls: string }> = {
   open: { label: 'Open', cls: 'border-gold/50 text-gold-soft' },
@@ -14,14 +14,6 @@ function fmt(iso: string) {
   const month = date.toLocaleString('en-US', { month: 'short' });
   const weekday = date.toLocaleString('en-US', { weekday: 'long' });
   return { month, day: String(d), weekday };
-}
-
-function rsvpHref(ev: MahjongEvent) {
-  const subject = encodeURIComponent(`RSVP — ${ev.title}`);
-  const body = encodeURIComponent(
-    `Hi,\n\nI'd love a seat at "${ev.title}" on ${ev.date} (${ev.time}) at ${ev.venue}, ${ev.neighborhood}.\n\nName:\nBrought a friend?:\n\nThanks!`
-  );
-  return `mailto:${site.contactEmail}?subject=${subject}&body=${body}`;
 }
 
 export default function Events() {
@@ -79,16 +71,7 @@ export default function Events() {
                 </p>
               </div>
 
-              <a
-                href={rsvpHref(ev)}
-                className={
-                  ev.status === 'sold-out'
-                    ? 'btn-ghost pointer-events-none opacity-40'
-                    : 'btn-gold whitespace-nowrap'
-                }
-              >
-                {ev.status === 'waitlist' ? 'Join waitlist' : 'RSVP'}
-              </a>
+              <RsvpButton ev={ev} />
             </li>
           );
         })}

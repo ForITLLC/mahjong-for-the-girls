@@ -1,14 +1,14 @@
 // Single source of truth for site-wide copy & contact details.
-// Caroline: change CONTACT_EMAIL to wherever you want inquiries to land.
-// It currently points at a branded address — point that mailbox at your inbox,
-// or swap in your own email here.
 
 export const site = {
   name: 'Mahjong for the Girls',
   tagline: 'A table is waiting.',
   city: 'Seattle',
-  // The contact form opens the visitor's mail app addressed here.
-  contactEmail: 'caroli.dudeck@gmail.com',
+  // Contact address is base64-encoded and assembled in the browser at runtime
+  // (see app/lib/email.ts) so the plaintext never ships in the static HTML —
+  // this keeps the inbox off email scrapers. To change it, base64-encode the
+  // new address:  printf '%s' 'you@example.com' | base64
+  contactEmailB64: 'Y2Fyb2xpLmR1ZGVja0BnbWFpbC5jb20=',
   instagram: 'https://instagram.com/', // TODO: drop in the real handle
   host: 'Caroline Dudeck',
 } as const;

@@ -14,10 +14,10 @@ export default function Footer() {
           Curated in {site.city} by {site.host}. {site.tagline}
         </p>
         <a
-          href={`mailto:${site.contactEmail}`}
+          href="#contact"
           className="order-2 text-gold-soft underline-offset-4 hover:underline md:order-3"
         >
-          {site.contactEmail}
+          Get in touch
         </a>
       </div>
     </footer>

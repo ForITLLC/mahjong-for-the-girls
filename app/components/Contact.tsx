@@ -2,20 +2,25 @@
 
 import { useState } from 'react';
 import { site } from '../site.config';
+import { buildMailto } from '../lib/email';
 
 // No backend: the form composes a mailto: and hands off to the visitor's
-// mail client. Caroline gets a real email; we get zero infrastructure.
+// mail client. Caroline gets a real email; we get zero infrastructure. The
+// address itself is assembled client-side (app/lib/email.ts) so it never
+// appears in the static HTML.
 export default function Contact() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
   const mailto = () => {
-    const subject = encodeURIComponent(`Hello from ${name || 'a future regular'}`);
-    const body = encodeURIComponent(
-      `${message}\n\n— ${name}${email ? `\nReply to: ${email}` : ''}`
-    );
-    return `mailto:${site.contactEmail}?subject=${subject}&body=${body}`;
+    const subject = `Hello from ${name || 'a future regular'}`;
+    const body = `${message}\n\n— ${name}${email ? `\nReply to: ${email}` : ''}`;
+    return buildMailto(subject, body);
+  };
+
+  const go = (href: string) => {
+    if (href !== '#') window.location.href = href;
   };
 
   return (
@@ -33,12 +38,13 @@ export default function Contact() {
             </p>
             <p className="mt-6 text-sm text-mist">
               Prefer email?{' '}
-              <a
-                href={`mailto:${site.contactEmail}`}
+              <button
+                type="button"
+                onClick={() => go(buildMailto('Hello', ''))}
                 className="text-gold-soft underline-offset-4 hover:underline"
               >
-                {site.contactEmail}
-              </a>
+                Write us directly
+              </button>
             </p>
           </div>
 
@@ -46,7 +52,7 @@ export default function Contact() {
             className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-7"
             onSubmit={(e) => {
               e.preventDefault();
-              window.location.href = mailto();
+              go(mailto());
             }}
           >
             <div>
