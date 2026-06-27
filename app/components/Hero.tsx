@@ -1,14 +1,16 @@
 import { site } from '../site.config';
 
-// Decorative mahjong tiles (unicode) scattered as quiet ornament.
-const tiles = ['🀄', '🀙', '🀐', '🀇', '🀛', '🀅'];
+// Decorative tiles rendered as CJK glyphs (winds + dragons). The Unicode
+// "mahjong tile" block (U+1F000…) has poor font coverage and shows as broken
+// tofu boxes on most browsers, so we use real characters in our tile chips.
+const tiles = ['東', '南', '西', '北', '中', '發'];
 
 export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 opacity-[0.06]">
-        <div className="absolute right-6 top-28 text-[14rem] leading-none md:right-24">
-          🀄
+        <div className="absolute right-6 top-28 font-display text-[14rem] leading-none md:right-24">
+          馬
         </div>
       </div>
 

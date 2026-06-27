@@ -66,14 +66,14 @@ export default function LearnGuide() {
             onClick={() => window.print()}
             className="btn-gold whitespace-nowrap text-sm"
           >
-            🖨 Print this guide
+            Print this guide
           </button>
         </div>
 
         {/* ---------- PAGE ONE: the tiles ---------- */}
         <div className="guide-page">
           <div className="grid gap-6 md:grid-cols-2">
-            <Card icon="🀙" title="The tiles — three suits">
+            <Card icon="萬" title="The tiles — three suits">
               <div className="flex flex-wrap gap-5">
                 <Chip glyph="筒" sub="Dots" />
                 <Chip glyph="條" sub="Bams" />
@@ -88,7 +88,7 @@ export default function LearnGuide() {
               </p>
             </Card>
 
-            <Card icon="🀀" title="Winds &amp; Dragons">
+            <Card icon="東" title="Winds &amp; Dragons">
               <div className="flex flex-wrap gap-4">
                 <Chip glyph="東" sub="East" />
                 <Chip glyph="南" sub="South" />
@@ -147,7 +147,7 @@ export default function LearnGuide() {
           </div>
 
           {/* glossary spans full width */}
-          <Card icon="🗣" title="Words you&rsquo;ll hear at the table">
+          <Card icon="💬" title="Words you&rsquo;ll hear at the table">
             <div className="grid gap-x-8 gap-y-2 sm:grid-cols-2">
               <p><strong className="text-ink">The Wall</strong> — the stacked tiles everyone builds before play.</p>
               <p><strong className="text-ink">The Card</strong> — the list of winning hands you&rsquo;re trying to make.</p>
@@ -198,7 +198,7 @@ export default function LearnGuide() {
             <Card icon="✅" title="Quick reminders">
               <ul className="space-y-2">
                 <li>🔍 <strong className="text-ink">When in doubt, count.</strong> Verify a group before you call it.</li>
-                <li>🃏 <strong className="text-ink">Jokers need a crowd.</strong> Only inside groups of three or more.</li>
+                <li>⭐ <strong className="text-ink">Jokers need a crowd.</strong> Only inside groups of three or more.</li>
                 <li>( ) <strong className="text-ink">Parentheses matter.</strong> On the card they group tiles — read carefully.</li>
                 <li>↪️ <strong className="text-ink">Walls left, play right.</strong> Turns move to the right around the table.</li>
               </ul>
