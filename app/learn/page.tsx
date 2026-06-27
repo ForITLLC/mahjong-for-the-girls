@@ -20,6 +20,8 @@ const downloads = [
     meta: '2 pages · Letter · double-sided',
     blurb:
       'Tiles, dragons, the Charleston, and how to read your card — everything for a first night, on two pages.',
+    web: '#guide',
+    webLabel: 'Read it on this page',
   },
   {
     file: '/printables/poster.pdf',
@@ -28,6 +30,8 @@ const downloads = [
     meta: '18 × 24 in · scan to RSVP',
     blurb:
       'Pin it up anywhere. A big, friendly QR code drops people straight onto the calendar to save a seat.',
+    web: '/invite',
+    webLabel: 'Open the web invite →',
   },
   {
     file: '/printables/cards.pdf',
@@ -36,6 +40,8 @@ const downloads = [
     meta: 'Letter sheet · 10 cards · 3.5 × 2 in',
     blurb:
       'Ten cut-out cards per sheet with a scan-to-RSVP QR. Slip one to anyone who asks about the table.',
+    web: '/card',
+    webLabel: 'Open the digital card →',
   },
 ];
 
@@ -101,6 +107,12 @@ export default function Learn() {
                     className="btn-gold mt-5 justify-center text-sm"
                   >
                     Download PDF
+                  </a>
+                  <a
+                    href={d.web}
+                    className="mt-3 block text-center text-sm text-sage-deep underline-offset-4 hover:underline"
+                  >
+                    {d.webLabel}
                   </a>
                 </div>
               </div>

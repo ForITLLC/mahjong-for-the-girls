@@ -175,6 +175,14 @@ body {
    keeps its brand colors. Each .guide-page starts on a fresh sheet.
 --------------------------------------------------------------------------- */
 @media print {
+  /* Keep every brand color/gradient in the printout (poster bars, card band,
+     tile chips) rather than letting browsers drop backgrounds to save ink. */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
   .no-print {
     display: none !important;
   }
