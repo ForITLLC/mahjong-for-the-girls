@@ -10,8 +10,10 @@ export const metadata: Metadata = {
 };
 
 // The business card, as a shareable digital card — a "link in bio" you can text
-// to anyone who asks about the table. Same brand as the printed cards; the printed
-// sheet lives at /printables/cards.pdf. Carries its own UTM for GA4.
+// to anyone who asks about the table. On screen it's the tap-list below; hit
+// Print and it lays out a full cut-it-yourself sheet of ten cards (the
+// .card-sheet block, print-only). Carries its own UTM for GA4.
+const CARDS_PER_SHEET = 10;
 const links = [
   {
     href: '/?utm_source=card&utm_medium=web&utm_campaign=printables#events',
@@ -40,7 +42,28 @@ const links = [
 export default function CardPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-12">
-      <div className="card-print pop w-full max-w-sm overflow-hidden rounded-3xl border border-ink/10 bg-white/80 shadow-xl">
+      {/* Print-only: a full Letter sheet of ten 3.5×2in cut-out cards. */}
+      <div className="card-sheet" aria-hidden="true">
+        {Array.from({ length: CARDS_PER_SHEET }).map((_, i) => (
+          <div key={i} className="card-cell">
+            <div className="card-cell-brand">
+              <p className="card-cell-kicker">{site.city} · American Mahjong</p>
+              <p className="card-cell-title">
+                Mahjong for the <span className="italic">Girls</span>
+              </p>
+              <p className="card-cell-tag">{site.tagline}</p>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="card-cell-qr" src="/img/qr-events.png" alt="" />
+            <div className="card-cell-meta">
+              <p className="card-cell-url">mahjongforthegirls.com</p>
+              <p className="card-cell-handle">{site.instagramHandle}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="card-print no-print pop w-full max-w-sm overflow-hidden rounded-3xl border border-ink/10 bg-white/80 shadow-xl">
         {/* brand band */}
         <div
           className="px-7 pb-6 pt-7 text-center text-white"
@@ -97,19 +120,13 @@ export default function CardPage() {
           })}
         </div>
 
-        <div className="no-print flex items-center justify-center gap-4 px-6 pb-6 text-xs text-mist">
-          <a
-            href="/printables/cards.pdf"
-            download
-            className="text-sage-deep underline-offset-4 hover:underline"
-          >
-            Download print sheet (PDF)
-          </a>
-          <span aria-hidden="true">·</span>
+        <div className="no-print flex items-center justify-center gap-2 px-6 pb-6 text-xs text-mist">
           <PrintButton
             className="text-sage-deep underline-offset-4 hover:underline"
-            label="Print this card"
+            label="Print a sheet of cards"
           />
+          <span aria-hidden="true">·</span>
+          <span>10 to a page, ready to cut</span>
         </div>
       </div>
     </main>

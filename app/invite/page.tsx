@@ -87,13 +87,6 @@ export default function Invite() {
         {/* utilities — hidden when printing */}
         <div className="no-print mt-10 flex flex-wrap items-center justify-center gap-3">
           <PrintButton label="Print this invite" />
-          <a
-            href="/printables/poster.pdf"
-            download
-            className="btn-ghost text-sm"
-          >
-            Download print poster (18×24 PDF)
-          </a>
           <Link href="/learn" className="text-sm text-sage-deep underline-offset-4 hover:underline">
             More free materials
           </Link>

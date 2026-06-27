@@ -170,11 +170,85 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
+   /card print sheet — a full Letter page of ten 3.5×2in business cards laid out
+   to cut. Hidden entirely on screen; only appears in the print box.
+--------------------------------------------------------------------------- */
+.card-sheet {
+  display: none;
+}
+.card-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  width: 3.5in;
+  height: 2in;
+  padding: 0.16in 0.18in;
+  box-sizing: border-box;
+  border: 0.5pt dashed rgba(47, 65, 56, 0.35); /* cut guide */
+  color: var(--mg-ink);
+  background: #fff;
+  overflow: hidden;
+}
+.card-cell-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2pt;
+}
+.card-cell-kicker {
+  font-size: 5pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mg-sage-deep);
+}
+.card-cell-title {
+  font-family: var(--font-display);
+  font-size: 13pt;
+  line-height: 1.05;
+  font-weight: 400;
+}
+.card-cell-tag {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 8pt;
+  color: var(--mg-mist);
+}
+.card-cell-qr {
+  width: 0.78in;
+  height: 0.78in;
+}
+.card-cell-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1pt;
+}
+.card-cell-url {
+  font-size: 7.5pt;
+  font-weight: 600;
+  color: var(--mg-sage-deep);
+}
+.card-cell-handle {
+  font-size: 6.5pt;
+  color: var(--mg-mist);
+}
+
+/* ---------------------------------------------------------------------------
    Print — the /learn guide should print clean, with no site chrome. Everything
    marked .no-print drops out; the .printable-guide expands to the full page and
    keeps its brand colors. Each .guide-page starts on a fresh sheet.
 --------------------------------------------------------------------------- */
 @media print {
+  /* The /card cut-sheet: 2 columns × 5 rows of cards, no page margin so the
+     3.5×2in cells tile a Letter sheet exactly. */
+  .card-sheet {
+    display: grid !important;
+    grid-template-columns: repeat(2, 3.5in);
+    grid-auto-rows: 2in;
+    justify-content: center;
+    align-content: start;
+    gap: 0;
+  }
   /* Keep every brand color/gradient in the printout (poster bars, card band,
      tile chips) rather than letting browsers drop backgrounds to save ink. */
   *,

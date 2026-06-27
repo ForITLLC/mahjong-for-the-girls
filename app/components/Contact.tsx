@@ -82,11 +82,12 @@ export default function Contact() {
             </div>
             <div>
               <label htmlFor="email" className="mb-1 block text-sm text-mist">
-                Email
+                Email <span className="text-coral-deep">·</span> required
               </label>
               <input
                 id="email"
                 type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-coral-deep"

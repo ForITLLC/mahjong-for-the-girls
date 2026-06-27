@@ -1,13 +1,15 @@
-// Upcoming mahjong events. Edit this list to manage the calendar —
-// no database, no admin panel. Keep `date` in ISO (YYYY-MM-DD) so the
-// calendar sorts correctly. `status` drives the badge on each card.
+// The real cadence: Caroline runs two standing tables, every other week —
+// Thursday evenings at 6:30 and Saturday afternoons at 12:30. Rather than hand-
+// maintain a list, we generate the next few upcoming instances from each slot's
+// anchor date (her first real sessions) so the calendar stays current between
+// deploys. Edit the slots below to change the pattern.
 
 export type EventStatus = 'open' | 'waitlist' | 'sold-out';
 
 export interface MahjongEvent {
   id: string;
   title: string;
-  /** ISO date, e.g. '2026-06-21' */
+  /** ISO date, e.g. '2026-07-09' */
   date: string;
   /** Free-form display time, e.g. '6:30 PM' */
   time: string;
@@ -17,67 +19,80 @@ export interface MahjongEvent {
   status: EventStatus;
   /** Level cue for newcomers vs regulars */
   level: 'All levels' | 'Beginners welcome' | 'Regulars';
+  /** Shown as a small cue that this is a standing, recurring table */
+  cadence: string;
 }
 
-export const events: MahjongEvent[] = [
+interface Slot {
+  key: string;
+  title: string;
+  /** Anchor: a real past/known occurrence (any date on the right weekday). */
+  anchor: string;
+  time: string;
+  blurb: string;
+  level: MahjongEvent['level'];
+}
+
+// Every other week (14-day cadence) anchored to Caroline's first two sessions.
+const INTERVAL_DAYS = 14;
+const UPCOMING_PER_SLOT = 4;
+
+const SLOTS: Slot[] = [
   {
-    id: 'solstice-social',
-    title: 'Solstice Social',
-    date: '2026-06-20',
+    key: 'thu',
+    title: 'Thursday Evening Table',
+    anchor: '2026-06-25', // Thursday
     time: '6:30 PM',
-    venue: 'The Conservatory',
-    neighborhood: 'Capitol Hill',
     blurb:
-      'Long light, low music, and tiles on the table. Our first night of summer — bring a friend, leave with three.',
-    status: 'open',
+      'Our standing weeknight game. Wind down with tiles, snacks, and good company — beginners and regulars at the same table.',
     level: 'All levels',
   },
   {
-    id: 'beginners-table',
-    title: "Beginners' Table",
-    date: '2026-06-28',
-    time: '2:00 PM',
-    venue: 'Analog Coffee back room',
-    neighborhood: 'Capitol Hill',
+    key: 'sat',
+    title: 'Saturday Afternoon Table',
+    anchor: '2026-06-27', // Saturday
+    time: '12:30 PM',
     blurb:
-      'Never touched a tile? Perfect. We teach the whole thing over an afternoon and an iced matcha. No experience, no pressure.',
-    status: 'open',
+      'A relaxed weekend session with plenty of daylight. The easiest place to start if you have never touched a tile.',
     level: 'Beginners welcome',
   },
-  {
-    id: 'rooftop-rounds',
-    title: 'Rooftop Rounds',
-    date: '2026-07-11',
-    time: '7:00 PM',
-    venue: 'Thompson Hotel Rooftop',
-    neighborhood: 'Downtown',
-    blurb:
-      'Golden hour over Elliott Bay, a drink in hand, and a fast little tournament for anyone who wants one.',
-    status: 'waitlist',
-    level: 'All levels',
-  },
-  {
-    id: 'sunday-house-game',
-    title: 'The Sunday House Game',
-    date: '2026-07-19',
-    time: '4:00 PM',
-    venue: "Caroline's place",
-    neighborhood: 'Madrona',
-    blurb:
-      'The standing game. Small, warm, a little competitive. Address shared with confirmed guests.',
-    status: 'open',
-    level: 'Regulars',
-  },
-  {
-    id: 'late-summer-salon',
-    title: 'Late-Summer Salon',
-    date: '2026-08-09',
-    time: '6:00 PM',
-    venue: 'Sit & Spin Studio',
-    neighborhood: 'Fremont',
-    blurb:
-      'Multiple tables, rotating partners, and a host who makes sure no one sits out. The big one.',
-    status: 'open',
-    level: 'All levels',
-  },
 ];
+
+function toISO(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function upcomingDates(anchorISO: string, count: number): string[] {
+  const [ay, am, ad] = anchorISO.split('-').map(Number);
+  const cursor = new Date(ay, am - 1, ad);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  // Step forward in INTERVAL_DAYS until we reach today or later.
+  while (cursor < today) {
+    cursor.setDate(cursor.getDate() + INTERVAL_DAYS);
+  }
+  const out: string[] = [];
+  for (let i = 0; i < count; i++) {
+    out.push(toISO(cursor));
+    cursor.setDate(cursor.getDate() + INTERVAL_DAYS);
+  }
+  return out;
+}
+
+export const events: MahjongEvent[] = SLOTS.flatMap((slot) =>
+  upcomingDates(slot.anchor, UPCOMING_PER_SLOT).map((date) => ({
+    id: `${slot.key}-${date}`,
+    title: slot.title,
+    date,
+    time: slot.time,
+    venue: 'Address shared when you RSVP',
+    neighborhood: 'Seattle',
+    blurb: slot.blurb,
+    status: 'open' as EventStatus,
+    level: slot.level,
+    cadence: 'Every other week',
+  }))
+).sort((a, b) => a.date.localeCompare(b.date));

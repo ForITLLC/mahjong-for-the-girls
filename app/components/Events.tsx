@@ -1,5 +1,6 @@
 import { events, type EventStatus } from '../data/events';
 import RsvpButton from './RsvpButton';
+import ExpressInterest from './ExpressInterest';
 
 const statusStyle: Record<EventStatus, { label: string; cls: string }> = {
   open: { label: 'Open', cls: 'border-sage/60 text-sage-deep' },
@@ -27,8 +28,9 @@ export default function Events() {
           </h2>
         </div>
         <p className="max-w-sm text-sm leading-relaxed text-mist">
-          Seats are limited and tables fill. Tap RSVP — Going, Maybe, or Can’t —
-          add your crew, and we’ll hold your chair.
+          We play every other week — Thursday evenings at 6:30 and Saturday
+          afternoons at 12:30. Tap RSVP — Going, Maybe, or Can’t — and we’ll hold
+          your chair.
         </p>
       </div>
 
@@ -66,6 +68,9 @@ export default function Events() {
                   <span className="hidden md:inline">{weekday} · </span>
                   {ev.time} · {ev.venue}, {ev.neighborhood} · {ev.level}
                 </p>
+                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-sage-deep/80">
+                  {ev.cadence}
+                </p>
                 <p className="mt-3 max-w-prose leading-relaxed text-mist">
                   {ev.blurb}
                 </p>
@@ -76,6 +81,18 @@ export default function Events() {
           );
         })}
       </ul>
+
+      {/* Express interest — for anyone the listed nights don't suit. */}
+      <div className="mt-10 flex flex-col items-center gap-4 rounded-2xl border border-dashed border-sage/50 bg-white/40 px-6 py-8 text-center">
+        <h3 className="font-display text-2xl text-ink">
+          None of these <span className="italic text-gilt">work?</span>
+        </h3>
+        <p className="max-w-md text-sm leading-relaxed text-mist">
+          The tables roll every other week, and we add nights as more of you turn
+          up. Tell us when you’re free and we’ll save you a seat at the next one.
+        </p>
+        <ExpressInterest label="Express interest" />
+      </div>
     </section>
   );
 }
