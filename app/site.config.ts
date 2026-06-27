@@ -9,7 +9,8 @@ export const site = {
   // this keeps the inbox off email scrapers. To change it, base64-encode the
   // new address:  printf '%s' 'you@example.com' | base64
   contactEmailB64: 'Y2Fyb2xpLmR1ZGVja0BnbWFpbC5jb20=',
-  instagram: 'https://instagram.com/', // TODO: drop in the real handle
+  instagram: 'https://www.instagram.com/mahjongforthegirls',
+  instagramHandle: '@mahjongforthegirls',
   host: 'Caroline Dudeck',
 } as const;
 

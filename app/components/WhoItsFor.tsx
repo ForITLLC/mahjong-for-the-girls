@@ -28,9 +28,9 @@ export default function WhoItsFor() {
             {lines.map((l) => (
               <li
                 key={l}
-                className="flex items-start gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-5 leading-relaxed"
+                className="flex items-start gap-4 rounded-xl border border-ink/10 bg-white/60 p-5 leading-relaxed"
               >
-                <span className="mt-0.5 text-gold" aria-hidden="true">
+                <span className="mt-0.5 text-coral-deep" aria-hidden="true">
                   ◆
                 </span>
                 <span>{l}</span>

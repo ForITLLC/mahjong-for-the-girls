@@ -25,11 +25,11 @@ export default function WhatItIs() {
         clear your calendar for.
       </h2>
 
-      <div className="mt-16 grid gap-px overflow-hidden rounded-2xl bg-white/10 md:grid-cols-3">
+      <div className="mt-16 grid gap-px overflow-hidden rounded-2xl bg-ink/10 md:grid-cols-3">
         {pillars.map((p) => (
           <div
             key={p.title}
-            className="bg-ink/70 p-8 backdrop-blur-sm transition-colors hover:bg-jade-deep/40"
+            className="bg-white/70 p-8 backdrop-blur-sm transition-colors hover:bg-sage/15"
           >
             <span
               className="tile mb-6 flex h-14 w-12 items-center justify-center text-3xl"

@@ -2,9 +2,9 @@ import { events, type EventStatus } from '../data/events';
 import RsvpButton from './RsvpButton';
 
 const statusStyle: Record<EventStatus, { label: string; cls: string }> = {
-  open: { label: 'Open', cls: 'border-gold/50 text-gold-soft' },
-  waitlist: { label: 'Waitlist', cls: 'border-rouge/50 text-rouge' },
-  'sold-out': { label: 'Sold out', cls: 'border-white/20 text-mist' },
+  open: { label: 'Open', cls: 'border-sage/60 text-sage-deep' },
+  waitlist: { label: 'Waitlist', cls: 'border-coral/70 text-coral-deep' },
+  'sold-out': { label: 'Sold out', cls: 'border-ink/20 text-mist' },
 };
 
 function fmt(iso: string) {
@@ -27,8 +27,8 @@ export default function Events() {
           </h2>
         </div>
         <p className="max-w-sm text-sm leading-relaxed text-mist">
-          Seats are limited and tables fill. RSVP opens your mail app — tell us
-          your name and we’ll hold your chair.
+          Seats are limited and tables fill. Tap RSVP — Going, Maybe, or Can’t —
+          add your crew, and we’ll hold your chair.
         </p>
       </div>
 
@@ -39,11 +39,11 @@ export default function Events() {
           return (
             <li
               key={ev.id}
-              className="group grid items-center gap-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-gold/40 hover:bg-white/[0.05] md:grid-cols-[auto_1fr_auto]"
+              className="group grid items-center gap-6 rounded-2xl border border-ink/10 bg-white/70 p-6 transition-colors hover:border-coral/50 hover:bg-white md:grid-cols-[auto_1fr_auto]"
             >
               <div className="flex items-center gap-5">
                 <div className="tile flex h-20 w-16 flex-col items-center justify-center leading-none">
-                  <span className="text-[0.6rem] uppercase tracking-[0.2em] text-jade">
+                  <span className="text-[0.6rem] uppercase tracking-[0.2em] text-sage-deep">
                     {month}
                   </span>
                   <span className="font-display text-3xl">{day}</span>

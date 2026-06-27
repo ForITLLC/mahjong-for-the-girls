@@ -5,6 +5,7 @@ import WhoItsFor from './components/WhoItsFor';
 import Events from './components/Events';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Rsvp from './components/Rsvp';
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+      <Rsvp />
     </>
   );
 }

@@ -1,35 +1,18 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { site } from '../site.config';
 import { buildMailto } from '../lib/email';
 
 // No backend: the form composes a mailto: and hands off to the visitor's
 // mail client. Caroline gets a real email; we get zero infrastructure. The
 // address itself is assembled client-side (app/lib/email.ts) so it never
-// appears in the static HTML.
+// appears in the static HTML. (Event RSVPs have their own playful flow in
+// Rsvp.tsx — this form is for general hellos.)
 export default function Contact() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const messageRef = useRef<HTMLTextAreaElement>(null);
-
-  // Calendar RSVP buttons dispatch 'rsvp-prefill' instead of opening a mailto.
-  // Drop their text into the message box and focus it once we've scrolled here.
-  useEffect(() => {
-    const onPrefill = (e: Event) => {
-      const detail = (e as CustomEvent<{ message?: string }>).detail;
-      if (!detail?.message) return;
-      setMessage(detail.message);
-      window.setTimeout(() => {
-        messageRef.current?.focus();
-        const len = messageRef.current?.value.length ?? 0;
-        messageRef.current?.setSelectionRange(len, len);
-      }, 500);
-    };
-    window.addEventListener('rsvp-prefill', onPrefill);
-    return () => window.removeEventListener('rsvp-prefill', onPrefill);
-  }, []);
 
   const mailto = () => {
     const subject = `Hello from ${name || 'a future regular'}`;
@@ -59,7 +42,7 @@ export default function Contact() {
               <button
                 type="button"
                 onClick={() => go(buildMailto('Hello', ''))}
-                className="text-gold-soft underline-offset-4 hover:underline"
+                className="text-coral-deep underline-offset-4 hover:underline"
               >
                 Write us directly
               </button>
@@ -67,7 +50,7 @@ export default function Contact() {
           </div>
 
           <form
-            className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-7"
+            className="space-y-4 rounded-2xl border border-ink/10 bg-white/70 p-7 shadow-sm"
             onSubmit={(e) => {
               e.preventDefault();
               go(mailto());
@@ -82,7 +65,7 @@ export default function Contact() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-lg border border-white/15 bg-ink/60 px-4 py-3 text-bone outline-none transition-colors focus:border-gold"
+                className="w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-coral-deep"
                 placeholder="First name is plenty"
               />
             </div>
@@ -95,7 +78,7 @@ export default function Contact() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-white/15 bg-ink/60 px-4 py-3 text-bone outline-none transition-colors focus:border-gold"
+                className="w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-coral-deep"
                 placeholder="so we can write back"
               />
             </div>
@@ -105,12 +88,11 @@ export default function Contact() {
               </label>
               <textarea
                 id="message"
-                ref={messageRef}
                 required
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={4}
-                className="w-full resize-none rounded-lg border border-white/15 bg-ink/60 px-4 py-3 text-bone outline-none transition-colors focus:border-gold"
+                className="w-full resize-none rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-coral-deep"
                 placeholder="Tell us a little about you, or which night caught your eye."
               />
             </div>

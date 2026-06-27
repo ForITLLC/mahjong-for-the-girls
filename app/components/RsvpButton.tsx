@@ -2,21 +2,17 @@
 
 import type { MahjongEvent } from '../data/events';
 
-// RSVP funnels into the on-page contact form rather than opening a mailto:
-// — a mailto would surface Caroline's address in the visitor's mail client.
-// We dispatch a prefill event the Contact form listens for, then smooth-scroll
-// down to it so the visitor lands on a message that's already filled in.
+// The RSVP button opens the Partiful-style RSVP modal (see Rsvp.tsx), which is
+// mounted once on the page and listens for this 'open-rsvp' event. The modal
+// collects Going / Maybe / Can't + a guest count and routes the reply to
+// Caroline by mail — her address is only assembled client-side, never in HTML.
 export default function RsvpButton({ ev }: { ev: MahjongEvent }) {
   const soldOut = ev.status === 'sold-out';
 
   const onClick = () => {
-    const message =
-      `I'd love a seat at "${ev.title}" on ${ev.date} (${ev.time}) ` +
-      `at ${ev.venue}, ${ev.neighborhood}.`;
     window.dispatchEvent(
-      new CustomEvent('rsvp-prefill', { detail: { message } })
+      new CustomEvent('open-rsvp', { detail: { eventId: ev.id } })
     );
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
