@@ -1,18 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { site } from '../site.config';
 import { buildMailto } from '../lib/email';
 
 // No backend: the form composes a mailto: and hands off to the visitor's
 // mail client. Caroline gets a real email; we get zero infrastructure. The
 // address itself is assembled client-side (app/lib/email.ts) so it never
-// appears in the static HTML. (Event RSVPs have their own playful flow in
-// Rsvp.tsx — this form is for general hellos.)
+// appears in the static HTML — and we never render a visible link to it.
+// Event RSVPs (Rsvp.tsx) funnel here too: they dispatch 'rsvp-prefill', we
+// fill the fields and scroll the form into view, then the visitor hits Send.
 export default function Contact() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Catch RSVPs handed off from the modal and prefill the form.
+  useEffect(() => {
+    const onPrefill = (e: Event) => {
+      const d = (e as CustomEvent<{ name?: string; email?: string; message?: string }>)
+        .detail;
+      if (!d) return;
+      if (d.name) setName(d.name);
+      if (d.email) setEmail(d.email);
+      if (d.message) setMessage(d.message);
+      // Let the modal's confirmation show first, then bring the form into view.
+      window.setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 350);
+    };
+    window.addEventListener('rsvp-prefill', onPrefill);
+    return () => window.removeEventListener('rsvp-prefill', onPrefill);
+  }, []);
 
   const mailto = () => {
     const subject = `Hello from ${name || 'a future regular'}`;
@@ -37,19 +57,10 @@ export default function Contact() {
               Want in on the next night, hosting a table of your own, or just
               curious? Say hello. {site.host} reads every note.
             </p>
-            <p className="mt-6 text-sm text-mist">
-              Prefer email?{' '}
-              <button
-                type="button"
-                onClick={() => go(buildMailto('Hello', ''))}
-                className="text-coral-deep underline-offset-4 hover:underline"
-              >
-                Write us directly
-              </button>
-            </p>
           </div>
 
           <form
+            ref={formRef}
             className="space-y-4 rounded-2xl border border-ink/10 bg-white/70 p-7 shadow-sm"
             onSubmit={(e) => {
               e.preventDefault();

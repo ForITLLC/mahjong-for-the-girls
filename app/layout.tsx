@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Fraunces, Jost } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import { site } from './site.config';
 
@@ -38,6 +39,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${jost.variable}`}>
       <body className="bg-field min-h-screen">{children}</body>
+      {/* Google Analytics 4 — loads after the page is interactive */}
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${site.gaMeasurementId}`}
+        strategy="afterInteractive"
+      />
+      <Script id="ga4-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${site.gaMeasurementId}');
+        `}
+      </Script>
     </html>
   );
 }

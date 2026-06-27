@@ -12,6 +12,8 @@ export const site = {
   instagram: 'https://www.instagram.com/mahjongforthegirls',
   instagramHandle: '@mahjongforthegirls',
   host: 'Caroline Dudeck',
+  // Google Analytics 4 measurement ID (Admin → Data streams → Web).
+  gaMeasurementId: 'G-3XVM3VXBSE',
 } as const;
 
 export type Site = typeof site;

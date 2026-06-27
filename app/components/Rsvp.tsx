@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { events, type MahjongEvent } from '../data/events';
-import { buildMailto } from '../lib/email';
 
 // Partiful-style RSVP. Mounted once on the page; opens when any RsvpButton
 // dispatches an 'open-rsvp' event with the event id. The visitor picks a
-// response (Going / Maybe / Can't), bumps a guest count, leaves a first name,
-// and we route the whole thing to Caroline by mail. Her address is decoded
-// client-side (app/lib/email.ts) so it never ships in the static HTML.
+// response (Going / Maybe / Can't), bumps a guest count, leaves a name + email,
+// and we hand the whole thing to the on-page contact form (via an 'rsvp-prefill'
+// event) so everything routes through one place — no email link ever ships.
 
 type Choice = 'going' | 'maybe' | 'cant';
 
@@ -93,20 +92,22 @@ export default function Rsvp() {
     const label =
       choice === 'going' ? 'Going' : choice === 'maybe' ? 'Maybe' : "Can't make it";
     const head = waitlist ? 'Waitlist RSVP' : 'RSVP';
-    const subject = `${head} · ${label} · ${ev.title}`;
     const partyLine =
       choice === 'cant'
         ? ''
         : `\nParty size: ${partySize} (${guests === 0 ? 'just me' : `me + ${guests}`})`;
-    const body =
+    const message =
       `${head} for "${ev.title}"\n` +
       `${fmtDate(ev.date)} · ${ev.time}\n` +
       `${ev.venue}, ${ev.neighborhood}\n\n` +
-      `Name: ${name}\n` +
-      `Response: ${label}${partyLine}\n` +
-      `Reply to: ${email.trim()}\n`;
-    const href = buildMailto(subject, body);
-    if (href !== '#') window.location.href = href;
+      `Response: ${label}${partyLine}\n`;
+    // Hand off to the on-page contact form — it owns delivery, so nothing here
+    // touches an email address. The form fills name/email/message and scrolls.
+    window.dispatchEvent(
+      new CustomEvent('rsvp-prefill', {
+        detail: { name: name.trim(), email: email.trim(), message },
+      })
+    );
     setSent(choice);
   };
 
@@ -167,8 +168,8 @@ export default function Rsvp() {
               {CONFIRM[sent].sub}
             </p>
             <p className="mt-4 text-xs text-mist">
-              Your mail app opened with the RSVP — hit send to lock it in.
-              We’ll confirm to{' '}
+              We dropped your RSVP into the contact form below — give it a quick
+              look and hit send to lock it in. We’ll confirm to{' '}
               <span className="text-ink">{email.trim() || 'your inbox'}</span>.
             </p>
             <button
@@ -285,7 +286,8 @@ export default function Rsvp() {
               {choice === 'cant' ? 'Send my regrets' : 'Send RSVP'}
             </button>
             <p className="mt-3 text-center text-xs text-mist">
-              Opens your mail app to Caroline — she’ll confirm to your inbox.
+              Drops your RSVP into the contact form below — Caroline confirms to
+              your inbox.
             </p>
           </div>
         )}
