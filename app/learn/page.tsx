@@ -63,12 +63,9 @@ export default function Learn() {
             </span>
             , and the website chrome drops away. No PDFs to wrangle.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-8 flex justify-center">
             <a href="#guide" className="btn-gold text-sm">
-              Read the guide
-            </a>
-            <a href="#materials" className="btn-ghost text-sm">
-              See all three
+              Read the full guide
             </a>
           </div>
         </section>
