@@ -44,6 +44,7 @@ export default function Rsvp() {
   const [choice, setChoice] = useState<Choice | null>(null);
   const [guests, setGuests] = useState(0);
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [sent, setSent] = useState<Choice | null>(null);
 
   const close = () => setEv(null);
@@ -58,6 +59,7 @@ export default function Rsvp() {
       setChoice(null);
       setGuests(0);
       setName('');
+      setEmail('');
       setSent(null);
     };
     window.addEventListener('open-rsvp', onOpen);
@@ -83,9 +85,11 @@ export default function Rsvp() {
 
   const waitlist = ev.status === 'waitlist';
   const partySize = guests + 1;
+  const emailOk = /^\S+@\S+\.\S+$/.test(email.trim());
+  const canSend = !!choice && name.trim().length > 0 && emailOk;
 
   const send = () => {
-    if (!choice || !name.trim()) return;
+    if (!canSend || !choice) return;
     const label =
       choice === 'going' ? 'Going' : choice === 'maybe' ? 'Maybe' : "Can't make it";
     const head = waitlist ? 'Waitlist RSVP' : 'RSVP';
@@ -99,7 +103,8 @@ export default function Rsvp() {
       `${fmtDate(ev.date)} · ${ev.time}\n` +
       `${ev.venue}, ${ev.neighborhood}\n\n` +
       `Name: ${name}\n` +
-      `Response: ${label}${partyLine}\n`;
+      `Response: ${label}${partyLine}\n` +
+      `Reply to: ${email.trim()}\n`;
     const href = buildMailto(subject, body);
     if (href !== '#') window.location.href = href;
     setSent(choice);
@@ -163,6 +168,8 @@ export default function Rsvp() {
             </p>
             <p className="mt-4 text-xs text-mist">
               Your mail app opened with the RSVP — hit send to lock it in.
+              We’ll confirm to{' '}
+              <span className="text-ink">{email.trim() || 'your inbox'}</span>.
             </p>
             <button
               type="button"
@@ -248,16 +255,37 @@ export default function Rsvp() {
               />
             </div>
 
+            {/* email — so Caroline can send a confirmation back */}
+            <div className="mt-4">
+              <label htmlFor="rsvp-email" className="mb-1 block text-sm text-mist">
+                Email <span className="text-coral-deep">·</span> for your confirmation
+              </label>
+              <input
+                id="rsvp-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@email.com"
+                aria-invalid={email.length > 0 && !emailOk}
+                className="w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-coral-deep"
+              />
+              {email.length > 0 && !emailOk && (
+                <p className="mt-1 text-xs text-red">
+                  That doesn’t look like an email yet.
+                </p>
+              )}
+            </div>
+
             <button
               type="button"
               onClick={send}
-              disabled={!choice || !name.trim()}
+              disabled={!canSend}
               className="btn-gold mt-5 w-full justify-center disabled:cursor-not-allowed disabled:opacity-40"
             >
               {choice === 'cant' ? 'Send my regrets' : 'Send RSVP'}
             </button>
             <p className="mt-3 text-center text-xs text-mist">
-              Opens your mail app to Caroline — nothing is stored here.
+              Opens your mail app to Caroline — she’ll confirm to your inbox.
             </p>
           </div>
         )}
