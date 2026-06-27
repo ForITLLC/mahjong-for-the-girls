@@ -168,3 +168,47 @@ body {
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Print — the /learn guide should print clean, with no site chrome. Everything
+   marked .no-print drops out; the .printable-guide expands to the full page and
+   keeps its brand colors. Each .guide-page starts on a fresh sheet.
+--------------------------------------------------------------------------- */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  .printable-guide {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .printable-guide > div {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  .printable-guide,
+  .printable-guide * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .guide-page {
+    page-break-after: always;
+    break-after: page;
+  }
+  .guide-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+  .break-inside-avoid {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  @page {
+    margin: 0.5in;
+  }
+}

@@ -26,7 +26,13 @@ export default function Footer() {
             <span>{site.instagramHandle}</span>
           </a>
           <a
-            href="#contact"
+            href="/learn"
+            className="text-sage-deep underline-offset-4 hover:underline"
+          >
+            Free printables
+          </a>
+          <a
+            href="/#contact"
             className="text-coral-deep underline-offset-4 hover:underline"
           >
             Get in touch

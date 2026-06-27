@@ -1,18 +1,20 @@
 import { site } from '../site.config';
 import InstagramIcon from './InstagramIcon';
 
+// Route-absolute so they resolve from any page (e.g. /learn), not just home.
 const links = [
-  { href: '#what', label: 'What it is' },
-  { href: '#who', label: "Who it's for" },
-  { href: '#events', label: 'Events' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/#what', label: 'What it is' },
+  { href: '/#who', label: "Who it's for" },
+  { href: '/#events', label: 'Events' },
+  { href: '/learn', label: 'Learn' },
+  { href: '/#contact', label: 'Contact' },
 ];
 
 export default function Nav() {
   return (
     <header className="sticky top-0 z-40 border-b border-ink/10 bg-cream/70 backdrop-blur-md">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#top" className="flex items-center gap-3">
+        <a href="/#top" className="flex items-center gap-3">
           <span className="tile h-8 w-7 text-lg font-display font-semibold">馬</span>
           <span className="font-display text-lg tracking-wide">
             Mahjong <span className="text-mist">for the Girls</span>
@@ -40,7 +42,7 @@ export default function Nav() {
           >
             <InstagramIcon />
           </a>
-          <a href="#events" className="btn-gold text-sm !px-5 !py-2.5">
+          <a href="/#events" className="btn-gold text-sm !px-5 !py-2.5">
             See the calendar
           </a>
         </div>
