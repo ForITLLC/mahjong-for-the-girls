@@ -18,17 +18,25 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: `${site.name} — ${site.city}`,
-  description: `Unserious American mahjong for the girls in ${site.city} 🀄️ Lessons, play, and events — vibe-curated, beginner-friendly, zero pressure. Phones down, friends made. ${site.tagline}`,
+  metadataBase: new URL('https://mahjongforthegirls.com'),
+  title: `${site.name} — It’s a Mahj Hot Summer`,
+  description: `It’s a Mahj Hot Summer 🌶️🍋 Unserious American mahjong for the girls in ${site.city} — margaritas, the 2026 card, and zero pressure. ${site.price} RSVP. Presented by ${site.presentedBy}.`,
   openGraph: {
-    title: `${site.name} — ${site.city}`,
-    description: `Unserious American mahjong for the girls in ${site.city}. Lessons, play, and events. Come make friends. ${site.tagline}`,
+    title: `It’s a Mahj Hot Summer 🌶️🍋 · ${site.name}`,
+    description: `Mahjong Margarita in ${site.city}. Refresh the basics, level up to the 2026 card — completely unserious, but ridiculously fun. ${site.price} RSVP.`,
     type: 'website',
+    images: [{ url: '/img/og.jpg', width: 1200, height: 630, alt: 'It’s a Mahj Hot Summer — Mahjong Margarita, Seattle' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `It’s a Mahj Hot Summer 🌶️🍋 · ${site.name}`,
+    description: `Mahjong Margarita in ${site.city}. ${site.price} RSVP — completely unserious, ridiculously fun.`,
+    images: ['/img/og.jpg'],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#f6f1e5',
+  themeColor: '#4ec5d6',
 };
 
 export default function RootLayout({

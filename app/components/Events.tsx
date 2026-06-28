@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { events as fallbackEvents, type EventStatus, type MahjongEvent } from '../data/events';
+import { site } from '../site.config';
 import RsvpButton from './RsvpButton';
 import ExpressInterest from './ExpressInterest';
 
@@ -64,9 +65,10 @@ export default function Events() {
           </h2>
         </div>
         <p className="max-w-sm text-sm leading-relaxed text-mist">
-          We play every other week — Thursday evenings at 6:30, Saturday
-          afternoons at 12:30. Tap RSVP — going, maybe, or can’t — and your chair
-          is held. No flaking guilt, we get it. 💌
+          Kick off summer at the <strong className="font-semibold text-coral-deep">Mahjong
+          Margarita</strong> ({site.price} · RSVP on Partiful 🍹), then it’s every
+          other week — Thursday evenings at 6:30, Saturday afternoons at 12:30.
+          Tap RSVP and your chair is held. No flaking guilt, we get it. 💌
         </p>
       </div>
 

@@ -14,6 +14,7 @@ module.exports = {
         coral: 'var(--mg-coral)',
         'coral-deep': 'var(--mg-coral-deep)',
         red: 'var(--mg-red)',
+        lime: 'var(--mg-lime)',
         cream: 'var(--mg-cream)',
         'cream-deep': 'var(--mg-cream-deep)',
         // Legacy aliases (kept so existing class names keep resolving)

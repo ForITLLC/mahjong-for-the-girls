@@ -2,8 +2,15 @@
 
 export const site = {
   name: 'Mahjong for the Girls',
-  tagline: 'Phones down, tiles up.',
+  tagline: 'It’s a mahj hot summer.',
   city: 'Seattle',
+  // The featured event right now: the summer "Mahjong Margarita" party.
+  presentedBy: '@mahjongforgirls',
+  price: '$35',
+  // Where the RSVP buttons point. When blank, they fall back to the on-page
+  // RSVP flow (#events). Drop the real Partiful event URL here to send RSVPs
+  // straight to Partiful instead.
+  rsvpUrl: '',
   // Contact address is base64-encoded and assembled in the browser at runtime
   // (see app/lib/email.ts) so the plaintext never ships in the static HTML —
   // this keeps the inbox off email scrapers. To change it, base64-encode the
