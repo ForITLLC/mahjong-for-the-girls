@@ -101,6 +101,19 @@ export default function Rsvp() {
       `${fmtDate(ev.date)} · ${ev.time}\n` +
       `${ev.venue}, ${ev.neighborhood}\n\n` +
       `Response: ${label}${partyLine}\n`;
+    // Best-effort: drop the lead into the CRM so Caroline sees every RSVP in the
+    // admin area, not just whatever makes it through the contact form. Silent on
+    // failure (e.g. backend not yet connected) — never blocks the user.
+    fetch('/api/capture', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name.trim(),
+        email: email.trim(),
+        notes: `${label}${partyLine} — ${ev.title} (${ev.date})`,
+        source: 'rsvp',
+      }),
+    }).catch(() => {});
     // Hand off to the on-page contact form — it owns delivery, so nothing here
     // touches an email address. The form fills name/email/message and scrolls.
     window.dispatchEvent(

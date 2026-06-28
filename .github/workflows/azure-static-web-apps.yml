@@ -28,7 +28,7 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations ######
           app_location: "/"        # App source code path
-          api_location: ""         # No API — contact is a mailto, no backend
+          api_location: "api"      # SWA-managed Functions: events editor + CRM
           output_location: "out"   # Next.js static export output
           ###### End of Repository/Build Configurations ######
 

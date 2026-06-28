@@ -1,4 +1,7 @@
-import { events, type EventStatus } from '../data/events';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { events as fallbackEvents, type EventStatus, type MahjongEvent } from '../data/events';
 import RsvpButton from './RsvpButton';
 import ExpressInterest from './ExpressInterest';
 
@@ -18,6 +21,39 @@ function fmt(iso: string) {
 }
 
 export default function Events() {
+  // Start from the built-in standing cadence so the section renders instantly and
+  // works even if the backend is offline. If an editor has published events via
+  // the admin area, swap them in — that list takes over the public calendar.
+  const [events, setEvents] = useState<MahjongEvent[]>(fallbackEvents);
+  useEffect(() => {
+    let live = true;
+    fetch('/api/events')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (live && Array.isArray(data) && data.length > 0) {
+          const norm: MahjongEvent[] = data
+            .map((e) => ({
+              id: e.id,
+              title: e.title,
+              date: e.date,
+              time: e.time,
+              venue: e.venue || 'Address shared when you RSVP',
+              neighborhood: e.neighborhood || 'Seattle',
+              blurb: e.blurb || '',
+              status: (['open', 'waitlist', 'sold-out'].includes(e.status) ? e.status : 'open') as EventStatus,
+              level: e.level || 'All levels',
+              cadence: e.cadence || 'One-off',
+            }))
+            .sort((a, b) => a.date.localeCompare(b.date));
+          setEvents(norm);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
+
   return (
     <section id="events" className="mx-auto max-w-6xl px-6 py-24">
       <div className="flex flex-wrap items-end justify-between gap-4">
