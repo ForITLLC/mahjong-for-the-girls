@@ -3,18 +3,17 @@
 @tailwind utilities;
 
 :root {
-  /* Brand palette for the "It's a Mahj Hot Summer" poster — a sunlit swimming
-     pool (aqua water), a margarita's orange + lime, and a red chili. Pulled
-     from Caroline's Canva flyer. Re-theme the whole site from here. */
-  --mg-sage: #4ec5d6; /* pool aqua — the water */
-  --mg-sage-deep: #137a8a; /* deep teal — headings, links, eyebrow */
-  --mg-coral: #f9a064; /* soft summer orange */
-  --mg-coral-deep: #ee6c2b; /* deep orange — primary buttons */
-  --mg-red: #e23b2e; /* chili red — accents & badges */
-  --mg-lime: #a8d84a; /* lime wedge — playful accents (best on dark water) */
-  --mg-cream: #fbf5e9; /* sunny cream — page background */
-  --mg-cream-deep: #f1e7d2; /* slightly deeper cream — panels */
-  --mg-ink: #133b43; /* deep pool teal-navy — primary text */
+  /* Brand palette sampled directly from the @mahjongforthegirls Instagram
+     profile picture (a sage-green mahjong scarf with a coral center, vivid
+     flower-red blooms and cream linework). Re-theme the whole site from here. */
+  --mg-sage: #7aa48e; /* soft sage green — the field of the scarf */
+  --mg-sage-deep: #436a57; /* deeper sage — headings, links */
+  --mg-coral: #f4a895; /* salmon/coral — the center diamond */
+  --mg-coral-deep: #ec7c63; /* warm coral — primary buttons */
+  --mg-red: #e2495a; /* vivid flower red — accents & badges */
+  --mg-cream: #f6f1e5; /* ivory linework — page background */
+  --mg-cream-deep: #ece4d2; /* slightly deeper cream — panels */
+  --mg-ink: #2f4138; /* deep pine — primary text */
 
   /* Legacy semantic aliases so existing class names keep resolving while the
      values now point at the Instagram palette. */
@@ -24,7 +23,7 @@
   --mg-gold-soft: var(--mg-coral);
   --mg-bone: var(--mg-cream);
   --mg-rouge: var(--mg-red);
-  --mg-mist: rgba(19, 59, 67, 0.62); /* muted secondary text on cream */
+  --mg-mist: rgba(47, 65, 56, 0.62); /* muted secondary text on cream */
 
   --font-display: 'Fraunces', Georgia, serif;
   --font-sans: 'Jost', system-ui, sans-serif;
@@ -46,12 +45,12 @@ body {
 }
 
 /* A soft, living gradient field behind the whole page — light & airy,
-   echoing the poster: a pool-aqua haze, a lime sparkle, a warm orange wash. */
+   echoing the scarf: sage haze, a coral blush, a wash of cream. */
 .bg-field {
   background:
-    radial-gradient(58rem 58rem at 10% -12%, rgba(78, 197, 214, 0.48), transparent 60%),
-    radial-gradient(46rem 46rem at 108% 4%, rgba(168, 216, 74, 0.28), transparent 58%),
-    radial-gradient(70rem 70rem at 82% 112%, rgba(238, 108, 43, 0.16), transparent 60%),
+    radial-gradient(58rem 58rem at 10% -12%, rgba(122, 164, 142, 0.45), transparent 60%),
+    radial-gradient(46rem 46rem at 108% 4%, rgba(244, 168, 149, 0.45), transparent 58%),
+    radial-gradient(70rem 70rem at 82% 112%, rgba(226, 73, 90, 0.12), transparent 60%),
     var(--mg-cream);
 }
 
@@ -74,9 +73,9 @@ body {
   color: var(--mg-sage-deep);
 }
 
-/* Orange→chili-red gradient text for display accents (kept name .text-gilt) */
+/* Coral gradient text for display accents (kept name .text-gilt) */
 .text-gilt {
-  background: linear-gradient(120deg, var(--mg-coral-deep), var(--mg-red) 72%, #c43224);
+  background: linear-gradient(120deg, var(--mg-coral), var(--mg-red) 70%, #c43747);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -92,8 +91,8 @@ body {
   color: var(--mg-sage-deep);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -3px 6px rgba(19, 107, 122, 0.16),
-    0 8px 22px rgba(19, 59, 67, 0.16);
+    inset 0 -3px 6px rgba(67, 106, 87, 0.16),
+    0 8px 22px rgba(47, 65, 56, 0.16);
 }
 
 /* Primary button — warm coral (kept name .btn-gold) */
@@ -108,11 +107,11 @@ body {
   padding: 0.85rem 1.6rem;
   border-radius: 999px;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
-  box-shadow: 0 10px 28px rgba(238, 108, 43, 0.38);
+  box-shadow: 0 10px 28px rgba(236, 124, 99, 0.35);
 }
 .btn-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 38px rgba(238, 108, 43, 0.5);
+  box-shadow: 0 16px 38px rgba(236, 124, 99, 0.46);
 }
 
 .btn-ghost {

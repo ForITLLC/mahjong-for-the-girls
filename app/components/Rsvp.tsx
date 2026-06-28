@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { events, type MahjongEvent } from '../data/events';
 
-// Partiful-style RSVP. Mounted once on the page; opens when any RsvpButton
+// Our on-page RSVP modal. Mounted once on the page; opens when any RsvpButton
 // dispatches an 'open-rsvp' event with the event id. The visitor picks a
 // response (Going / Maybe / Can't), bumps a guest count, leaves a name + email,
 // and we hand the whole thing to the on-page contact form (via an 'rsvp-prefill'

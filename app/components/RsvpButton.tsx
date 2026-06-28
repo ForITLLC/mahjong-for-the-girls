@@ -2,7 +2,7 @@
 
 import type { MahjongEvent } from '../data/events';
 
-// The RSVP button opens the Partiful-style RSVP modal (see Rsvp.tsx), which is
+// The RSVP button opens our on-page RSVP modal (see Rsvp.tsx), which is
 // mounted once on the page and listens for this 'open-rsvp' event. The modal
 // collects Going / Maybe / Can't + a guest count and routes the reply to
 // Caroline by mail — her address is only assembled client-side, never in HTML.

@@ -3,11 +3,12 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import LearnGuide from '../components/LearnGuide';
 import { site } from '../site.config';
+import { posters } from '../data/posters';
 
 export const metadata: Metadata = {
-  title: `Learn Mahjong — Free Printables · ${site.name}`,
+  title: `Goodies — Posters & Free Printables · ${site.name}`,
   description:
-    'Free American mahjong starter materials: a beginner’s table guide, a QR invite poster, and business cards. All web pages — open one and hit print. No sign-up, no cost, no PDFs.',
+    'Seasonal mahjong posters to save and share, plus free American mahjong printables: a beginner’s table guide, a QR invite poster, and business cards. Web pages — open one and hit print. No sign-up, no cost, no PDFs.',
 };
 
 // Each material is a web page that prints clean (Cmd/Ctrl-P → the site chrome
@@ -52,29 +53,94 @@ export default function Learn() {
       <main>
         {/* hero */}
         <section className="no-print mx-auto max-w-5xl px-6 pb-12 pt-16 text-center">
-          <p className="eyebrow">Free to print &amp; share</p>
+          <p className="eyebrow">Goodies · free to grab &amp; share</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight md:text-6xl">
-            Everything you need to{' '}
-            <span className="italic text-gilt">start playing.</span>
+            Posters, printables,{' '}
+            <span className="italic text-gilt">all yours.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl leading-relaxed text-mist">
-            We made these and we&rsquo;re giving them away — no sign-up, no cost,
-            no catch. 💌 Each one is a web page that prints clean: open it, hit{' '}
+            Seasonal posters to send to the group chat, plus print-ready starter
+            materials — no sign-up, no cost, no catch. 💌 Each printable is a web
+            page that prints clean: open it, hit{' '}
             <span className="whitespace-nowrap rounded bg-cream-deep px-1.5 py-0.5 text-sm text-ink">
               Print
             </span>
             , and the website chrome drops away. No PDFs to wrangle.
           </p>
-          <div className="mt-8 flex justify-center">
-            <a href="#guide" className="btn-gold text-sm">
-              Read the full guide
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <a href="#posters" className="btn-gold text-sm">
+              See the posters
+            </a>
+            <a href="#guide" className="btn-ghost text-sm">
+              Read the guide
             </a>
           </div>
         </section>
 
+        {/* Seasonal posters — the rotating advertisement art: the current
+            "flavor of the month" (badged) plus the whole collection. Each tile
+            links to the full-size image, set to download for easy sharing. */}
+        <section id="posters" className="no-print mx-auto max-w-6xl px-6 py-12">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Seasonal posters</p>
+              <h2 className="mt-3 font-display text-3xl font-light leading-tight md:text-4xl">
+                The <span className="italic text-gilt">flavor of the month</span>
+                , and every season before it.
+              </h2>
+            </div>
+            <p className="max-w-sm text-sm leading-relaxed text-mist">
+              Every night gets its own poster. Save one, drop it in the group
+              chat, pin it up — they’re made to be shared. 💌
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {posters.map((p) => (
+              <a
+                key={p.id}
+                href={p.image}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="group relative block overflow-hidden rounded-2xl border border-ink/10 bg-white/70 shadow-sm transition-shadow hover:shadow-md"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={p.image}
+                  alt={`${p.title} — ${p.tagline}`}
+                  className="aspect-[4/5] w-full object-cover"
+                />
+                {p.current && (
+                  <span className="absolute left-3 top-3 rounded-full bg-coral-deep px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wider text-white shadow">
+                    This season
+                  </span>
+                )}
+                <div className="flex items-center justify-between gap-2 px-4 py-3">
+                  <div>
+                    <p className="font-display text-base text-ink">{p.season}</p>
+                    <p className="text-xs text-mist">{p.tagline}</p>
+                  </div>
+                  <span className="whitespace-nowrap text-sm text-sage-deep opacity-0 transition-opacity group-hover:opacity-100">
+                    Save ↓
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <div className="no-print mx-auto my-4 max-w-5xl px-6">
+          <div className="rule" />
+        </div>
+
         {/* materials grid — each links to a print-ready web page */}
         <section id="materials" className="no-print mx-auto max-w-6xl px-6 py-12">
-          <div className="grid gap-8 md:grid-cols-3">
+          <p className="eyebrow">Printables</p>
+          <h2 className="mt-3 font-display text-3xl font-light leading-tight md:text-4xl">
+            Print-ready <span className="italic text-gilt">starter materials.</span>
+          </h2>
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
             {materials.map((d) => (
               <div
                 key={d.href}

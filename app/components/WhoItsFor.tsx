@@ -15,7 +15,7 @@ export default function WhoItsFor() {
             <h2 className="mt-4 font-display text-4xl font-light leading-tight md:text-5xl">
               If you’ve read this far,
               <br />
-              <span className="italic text-gilt">it’s for you. 💖</span>
+              <span className="italic text-gilt">it’s for you.</span> 💖
             </h2>
             <p className="mt-6 max-w-prose leading-relaxed text-mist">
               Mahjong for the Girls is girls-first and warmth-first — every

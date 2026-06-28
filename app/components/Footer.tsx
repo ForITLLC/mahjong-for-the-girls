@@ -29,7 +29,7 @@ export default function Footer() {
             href="/learn"
             className="text-sage-deep underline-offset-4 hover:underline"
           >
-            Free printables
+            Goodies
           </a>
           <a
             href="/#contact"

@@ -10,7 +10,7 @@ const links = [
   { href: '/#who', label: "Who it's for" },
   { href: '/#gallery', label: 'Photos' },
   { href: '/#events', label: 'Events' },
-  { href: '/learn', label: 'Learn' },
+  { href: '/learn', label: 'Goodies' },
   { href: '/#contact', label: 'Contact' },
 ];
 
