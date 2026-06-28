@@ -1,14 +1,14 @@
 {
   "name": "mahjong-admin-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "SWA managed Functions API: events editor + lightweight CRM, backed by Azure Table Storage.",
+  "description": "SWA managed Functions API: events editor + lightweight CRM, backed by Azure SQL on the shared forit-saas-sql server (ForIT client-website pattern).",
   "main": "src/functions/*.js",
   "scripts": {
     "start": "func start"
   },
   "dependencies": {
     "@azure/functions": "^4.5.0",
-    "@azure/data-tables": "^13.3.0"
+    "mssql": "^11.0.1"
   }
 }

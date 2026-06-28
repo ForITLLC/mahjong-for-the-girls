@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { site } from '../site.config';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 import PrintButton from '../components/PrintButton';
 
 export const metadata: Metadata = {
@@ -8,13 +10,26 @@ export const metadata: Metadata = {
   description: `A standing invitation to ${site.name} in ${site.city}. ${site.tagline} Tap to save your seat.`,
 };
 
+// A few real photos from the table — they print with the poster so a pinned-up
+// invite shows what the night actually looks like, not just a QR code.
+const photos = [
+  { src: '/img/photos/tables-set.jpg', alt: 'A table set and waiting for a night of mahjong' },
+  { src: '/img/photos/table-life.jpg', alt: 'Friends gathered around the mahjong table' },
+  { src: '/img/photos/charcuterie.jpg', alt: 'A grazing board laid out for the evening' },
+];
+
 // The poster, as a shareable web page. Text someone this link, or pull it up on
 // your phone for a friend to scan. On screen the call-to-action is a real button;
 // the QR is there for in-person scans. Carries its own UTM so GA4 separates web
-// invite traffic from printed-poster scans. Prints clean via @media print.
+// invite traffic from printed-poster scans. Wears the same site chrome as the
+// rest of the materials (hidden on print) and prints clean via @media print.
 export default function Invite() {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-16 text-center">
+    <>
+      <div className="no-print">
+        <Nav />
+      </div>
+      <main className="relative flex min-h-[82vh] flex-col items-center justify-center overflow-hidden px-6 py-16 text-center">
       {/* top + bottom brand bars */}
       <span
         className="pointer-events-none absolute inset-x-0 top-0 h-2"
@@ -47,6 +62,19 @@ export default function Invite() {
           <br className="hidden sm:block" /> Beginners welcome — we&rsquo;ll teach
           you.
         </p>
+
+        {/* a glimpse of the table — prints with the poster */}
+        <div className="mt-8 grid w-full max-w-md grid-cols-3 gap-2.5">
+          {photos.map((p) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={p.src}
+              src={p.src}
+              alt={p.alt}
+              className="aspect-[3/4] w-full rounded-xl border border-ink/10 object-cover shadow-sm"
+            />
+          ))}
+        </div>
 
         <div className="my-9 flex items-center gap-3 text-coral-deep" aria-hidden="true">
           <span className="h-px w-16 bg-coral/60" />
@@ -92,6 +120,10 @@ export default function Invite() {
           </Link>
         </div>
       </div>
-    </main>
+      </main>
+      <div className="no-print">
+        <Footer />
+      </div>
+    </>
   );
 }

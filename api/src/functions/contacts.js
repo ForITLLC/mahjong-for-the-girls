@@ -1,63 +1,84 @@
-// Lightweight CRM — contacts.
-//   POST   /api/capture          — PUBLIC. The site drops RSVP/contact leads here.
-//   GET    /api/admin/contacts   — editor only. The whole contact list.
-//   POST   /api/admin/contacts   — editor only. Create or update (id present = update).
-//   DELETE /api/admin/contacts?id=…  — editor only.
+// Lightweight CRM — contacts (Azure SQL).
+//   POST   /api/capture            — PUBLIC. The site drops RSVP/contact leads here.
+//   GET    /api/admin/contacts     — authenticated + allowlisted. The whole list.
+//   POST   /api/admin/contacts     — authenticated + allowlisted. Create/update.
+//   DELETE /api/admin/contacts?id= — authenticated + allowlisted.
 //
 // A contact is deliberately simple: name, email, phone, status, notes, source.
 // `status` moves a lead through a tiny pipeline (new → going → regular → past).
+// Capture de-dupes on lowercased email so repeat RSVPs update the same lead.
 
 const { app } = require('@azure/functions');
-const { configured, table, caller, newId, json, notConfigured } = require('../store');
+const { sql, configured, pool, newId, authorize, json, notConfigured, forbidden } = require('../db');
 
-const PK = 'contact';
-const FIELDS = ['name', 'email', 'phone', 'status', 'notes', 'source'];
 const STATUSES = ['new', 'going', 'maybe', 'regular', 'past'];
 
-function rowToContact(c) {
-  const out = { id: c.rowKey, createdAt: c.createdAt || '', updatedAt: c.updatedAt || '' };
-  for (const f of FIELDS) out[f] = c[f] ?? '';
-  return out;
+function rowToContact(r) {
+  return {
+    id: r.id,
+    name: r.name ?? '',
+    email: r.email ?? '',
+    phone: r.phone ?? '',
+    status: r.status ?? 'new',
+    notes: r.notes ?? '',
+    source: r.source ?? '',
+    createdAt: r.created_at ? new Date(r.created_at).toISOString() : '',
+    updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : '',
+  };
 }
 
-async function findByEmail(t, email) {
-  const e = email.toLowerCase().replace(/'/g, "''");
-  for await (const c of t.listEntities({ queryOptions: { filter: `PartitionKey eq '${PK}' and emailLower eq '${e}'` } })) {
-    return c;
-  }
-  return null;
-}
-
-// PUBLIC capture — used by the RSVP modal and contact form. De-dupes on email so
-// repeat RSVPs update the same lead rather than piling up. Never returns data.
+// PUBLIC capture — used by the RSVP modal and contact form. Never returns data.
 app.http('contactCapture', {
   route: 'capture',
   methods: ['POST'],
   authLevel: 'anonymous',
   handler: async (request) => {
-    if (!configured()) return json({ ok: true, stored: false }); // silently no-op until storage is set
+    if (!configured()) return json({ ok: true, stored: false }); // no-op until DB is set
     const body = await request.json().catch(() => null);
     if (!body || !body.email) return json({ ok: true, stored: false });
     const email = String(body.email).trim();
-    const t = await table('contacts');
-    const existing = await findByEmail(t, email);
-    const now = new Date().toISOString();
-    if (existing) {
-      existing.name = body.name || existing.name;
-      if (body.notes) existing.notes = `${existing.notes ? existing.notes + '\n' : ''}${body.notes}`;
-      existing.updatedAt = now;
-      await t.updateEntity(existing, 'Merge');
-      return json({ ok: true, stored: true, id: existing.rowKey });
+    const emailLower = email.toLowerCase();
+
+    try {
+      const p = await pool();
+      const existing = await p
+        .request()
+        .input('emailLower', sql.NVarChar(320), emailLower)
+        .query('SELECT TOP 1 id, notes FROM dbo.contacts WHERE email_lower = @emailLower');
+
+      if (existing.recordset.length) {
+        const row = existing.recordset[0];
+        const merged = body.notes
+          ? `${row.notes ? row.notes + '\n' : ''}${body.notes}`
+          : row.notes;
+        await p
+          .request()
+          .input('id', sql.NVarChar(60), row.id)
+          .input('name', sql.NVarChar(200), body.name || null)
+          .input('notes', sql.NVarChar(sql.MAX), merged)
+          .query(`UPDATE dbo.contacts
+                  SET name = COALESCE(NULLIF(@name, ''), name), notes = @notes, updated_at = sysutcdatetime()
+                  WHERE id = @id`);
+        return json({ ok: true, stored: true, id: row.id });
+      }
+
+      const id = newId('c');
+      await p
+        .request()
+        .input('id', sql.NVarChar(60), id)
+        .input('name', sql.NVarChar(200), body.name || '')
+        .input('email', sql.NVarChar(320), email)
+        .input('emailLower', sql.NVarChar(320), emailLower)
+        .input('phone', sql.NVarChar(60), body.phone || '')
+        .input('notes', sql.NVarChar(sql.MAX), body.notes || '')
+        .input('source', sql.NVarChar(60), body.source || 'website')
+        .query(`INSERT INTO dbo.contacts (id, name, email, email_lower, phone, status, notes, source, created_at, updated_at)
+                VALUES (@id, @name, @email, @emailLower, @phone, 'new', @notes, @source, sysutcdatetime(), sysutcdatetime())`);
+      return json({ ok: true, stored: true, id });
+    } catch {
+      // Never surface a capture failure to a public visitor.
+      return json({ ok: true, stored: false });
     }
-    const id = newId('c');
-    const entity = {
-      partitionKey: PK, rowKey: id, emailLower: email.toLowerCase(),
-      name: body.name || '', email, phone: body.phone || '',
-      status: 'new', notes: body.notes || '', source: body.source || 'website',
-      createdAt: now, updatedAt: now,
-    };
-    await t.createEntity(entity);
-    return json({ ok: true, stored: true, id });
   },
 });
 
@@ -65,15 +86,16 @@ app.http('contactsAdminList', {
   route: 'admin/contacts',
   methods: ['GET'],
   authLevel: 'anonymous',
-  handler: async () => {
+  handler: async (request) => {
     if (!configured()) return notConfigured();
-    const t = await table('contacts');
-    const items = [];
-    for await (const c of t.listEntities({ queryOptions: { filter: `PartitionKey eq '${PK}'` } })) {
-      items.push(rowToContact(c));
-    }
-    items.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
-    return json(items);
+    const auth = await authorize(request);
+    if (!auth.ok) return forbidden(auth.reason);
+    const p = await pool();
+    const r = await p
+      .request()
+      .query(`SELECT id, name, email, phone, status, notes, source, created_at, updated_at
+              FROM dbo.contacts ORDER BY updated_at DESC`);
+    return json(r.recordset.map(rowToContact));
   },
 });
 
@@ -83,24 +105,39 @@ app.http('contactsAdminUpsert', {
   authLevel: 'anonymous',
   handler: async (request) => {
     if (!configured()) return notConfigured();
+    const auth = await authorize(request);
+    if (!auth.ok) return forbidden(auth.reason);
+
     const body = await request.json().catch(() => null);
     if (!body || (!body.name && !body.email)) {
       return json({ error: 'bad_request', message: 'name or email is required.' }, 400);
     }
-    const who = caller(request);
-    const now = new Date().toISOString();
-    const t = await table('contacts');
     const id = body.id && String(body.id).trim() ? String(body.id).trim() : newId('c');
     const status = STATUSES.includes(body.status) ? body.status : 'new';
-    const entity = {
-      partitionKey: PK, rowKey: id,
-      emailLower: (body.email || '').toLowerCase(),
-      name: body.name || '', email: body.email || '', phone: body.phone || '',
-      status, notes: body.notes || '', source: body.source || 'manual',
-      updatedAt: now, updatedBy: who?.userDetails || 'unknown',
-    };
-    if (!body.id) entity.createdAt = now;
-    await t.upsertEntity(entity, 'Merge');
+    const email = body.email || '';
+
+    const p = await pool();
+    await p
+      .request()
+      .input('id', sql.NVarChar(60), id)
+      .input('name', sql.NVarChar(200), body.name || '')
+      .input('email', sql.NVarChar(320), email)
+      .input('emailLower', sql.NVarChar(320), email.toLowerCase())
+      .input('phone', sql.NVarChar(60), body.phone || '')
+      .input('status', sql.NVarChar(20), status)
+      .input('notes', sql.NVarChar(sql.MAX), body.notes || '')
+      .input('source', sql.NVarChar(60), body.source || 'manual')
+      .input('updatedBy', sql.NVarChar(200), auth.email)
+      .query(`
+        MERGE dbo.contacts AS t
+        USING (SELECT @id AS id) AS s ON t.id = s.id
+        WHEN MATCHED THEN UPDATE SET
+          name=@name, email=@email, email_lower=@emailLower, phone=@phone, status=@status,
+          notes=@notes, source=@source, updated_by=@updatedBy, updated_at=sysutcdatetime()
+        WHEN NOT MATCHED THEN INSERT
+          (id, name, email, email_lower, phone, status, notes, source, updated_by, created_at, updated_at)
+          VALUES (@id, @name, @email, @emailLower, @phone, @status, @notes, @source, @updatedBy, sysutcdatetime(), sysutcdatetime());
+      `);
     return json({ ok: true, id });
   },
 });
@@ -111,10 +148,12 @@ app.http('contactsAdminDelete', {
   authLevel: 'anonymous',
   handler: async (request) => {
     if (!configured()) return notConfigured();
+    const auth = await authorize(request);
+    if (!auth.ok) return forbidden(auth.reason);
     const id = new URL(request.url).searchParams.get('id');
     if (!id) return json({ error: 'bad_request', message: 'id query param required.' }, 400);
-    const t = await table('contacts');
-    await t.deleteEntity(PK, id).catch(() => {});
+    const p = await pool();
+    await p.request().input('id', sql.NVarChar(60), id).query('DELETE FROM dbo.contacts WHERE id = @id');
     return json({ ok: true, id });
   },
 });

@@ -1,33 +1,40 @@
-// Events API.
-//   GET  /api/events        — PUBLIC. The published list the website reads.
-//   GET  /api/admin/events  — editor only (SWA route rule). Same list, for editing.
-//   POST /api/admin/events  — editor only. Upsert one event (create or update).
-//   DELETE /api/admin/events?id=…  — editor only. Remove one event.
+// Events API (Azure SQL).
+//   GET    /api/events             — PUBLIC. The visible list the website reads.
+//   GET    /api/admin/events       — authenticated + allowlisted. Every event.
+//   POST   /api/admin/events       — authenticated + allowlisted. Upsert one.
+//   DELETE /api/admin/events?id=…  — authenticated + allowlisted. Remove one.
 //
-// An "event" row carries exactly the fields the public <Events> component needs,
-// so the site can render straight from the store with no transform.
+// A row carries exactly the fields the public <Events> component needs, so the
+// site renders straight from the DB with no transform. `date` is stored as an
+// ISO 'YYYY-MM-DD' string to avoid any timezone drift between DB and browser.
 
 const { app } = require('@azure/functions');
-const { configured, table, caller, json, notConfigured } = require('../store');
+const { sql, configured, pool, authorize, json, notConfigured, forbidden } = require('../db');
 
-const PK = 'event';
-const FIELDS = ['title', 'date', 'time', 'venue', 'neighborhood', 'blurb', 'status', 'level', 'cadence'];
-
-function rowToEvent(e) {
-  const out = { id: e.rowKey };
-  for (const f of FIELDS) out[f] = e[f] ?? '';
-  out.hidden = !!e.hidden;
-  return out;
+function rowToEvent(r) {
+  return {
+    id: r.id,
+    title: r.title ?? '',
+    date: r.date ?? '',
+    time: r.time ?? '',
+    venue: r.venue ?? '',
+    neighborhood: r.neighborhood ?? '',
+    blurb: r.blurb ?? '',
+    status: r.status ?? 'open',
+    level: r.level ?? 'All levels',
+    cadence: r.cadence ?? 'One-off',
+    hidden: !!r.hidden,
+  };
 }
 
-async function listEvents() {
-  const t = await table('events');
-  const items = [];
-  for await (const e of t.listEntities({ queryOptions: { filter: `PartitionKey eq '${PK}'` } })) {
-    items.push(rowToEvent(e));
-  }
-  items.sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  return items;
+async function listEvents(onlyVisible) {
+  const p = await pool();
+  const where = onlyVisible ? 'WHERE hidden = 0' : '';
+  const r = await p
+    .request()
+    .query(`SELECT id, title, date, time, venue, neighborhood, blurb, status, level, cadence, hidden
+            FROM dbo.events ${where} ORDER BY date ASC`);
+  return r.recordset.map(rowToEvent);
 }
 
 // Public read — only the visible events.
@@ -37,8 +44,11 @@ app.http('eventsPublic', {
   authLevel: 'anonymous',
   handler: async () => {
     if (!configured()) return json([]); // graceful: site falls back to its built-in cadence
-    const all = await listEvents();
-    return json(all.filter((e) => !e.hidden));
+    try {
+      return json(await listEvents(true));
+    } catch {
+      return json([]); // never break the public calendar on a DB hiccup
+    }
   },
 });
 
@@ -47,35 +57,74 @@ app.http('eventsAdminList', {
   route: 'admin/events',
   methods: ['GET'],
   authLevel: 'anonymous',
-  handler: async () => {
+  handler: async (request) => {
     if (!configured()) return notConfigured();
-    return json(await listEvents());
+    const auth = await authorize(request);
+    if (!auth.ok) return forbidden(auth.reason);
+    return json(await listEvents(false));
   },
 });
 
-// Admin upsert.
+// Admin upsert (create when id is blank, update when present).
 app.http('eventsAdminUpsert', {
   route: 'admin/events',
   methods: ['POST'],
   authLevel: 'anonymous',
   handler: async (request) => {
     if (!configured()) return notConfigured();
+    const auth = await authorize(request);
+    if (!auth.ok) return forbidden(auth.reason);
+
     const body = await request.json().catch(() => null);
     if (!body || !body.title || !body.date) {
       return json({ error: 'bad_request', message: 'title and date are required.' }, 400);
     }
-    const who = caller(request);
-    const id = body.id && String(body.id).trim() ? String(body.id).trim() : `ev_${body.date}_${Math.random().toString(36).slice(2, 7)}`;
-    const entity = { partitionKey: PK, rowKey: id, hidden: !!body.hidden, updatedBy: who?.userDetails || 'unknown', updatedAt: new Date().toISOString() };
-    for (const f of FIELDS) entity[f] = body[f] ?? '';
-    if (!entity.cadence) entity.cadence = 'One-off';
-    if (!entity.status) entity.status = 'open';
-    if (!entity.level) entity.level = 'All levels';
-    if (!entity.neighborhood) entity.neighborhood = 'Seattle';
-    if (!entity.venue) entity.venue = 'Address shared when you RSVP';
-    const t = await table('events');
-    await t.upsertEntity(entity, 'Replace');
-    return json({ ok: true, id, event: rowToEvent(entity) });
+    const id =
+      body.id && String(body.id).trim()
+        ? String(body.id).trim()
+        : `ev_${body.date}_${Math.random().toString(36).slice(2, 7)}`;
+
+    const vals = {
+      title: body.title ?? '',
+      date: body.date ?? '',
+      time: body.time ?? '',
+      venue: body.venue || 'Address shared when you RSVP',
+      neighborhood: body.neighborhood || 'Seattle',
+      blurb: body.blurb ?? '',
+      status: body.status || 'open',
+      level: body.level || 'All levels',
+      cadence: body.cadence || 'One-off',
+      hidden: body.hidden ? 1 : 0,
+    };
+
+    const p = await pool();
+    await p
+      .request()
+      .input('id', sql.NVarChar(60), id)
+      .input('title', sql.NVarChar(400), vals.title)
+      .input('date', sql.NVarChar(10), vals.date)
+      .input('time', sql.NVarChar(60), vals.time)
+      .input('venue', sql.NVarChar(300), vals.venue)
+      .input('neighborhood', sql.NVarChar(120), vals.neighborhood)
+      .input('blurb', sql.NVarChar(sql.MAX), vals.blurb)
+      .input('status', sql.NVarChar(20), vals.status)
+      .input('level', sql.NVarChar(60), vals.level)
+      .input('cadence', sql.NVarChar(60), vals.cadence)
+      .input('hidden', sql.Bit, vals.hidden)
+      .input('updatedBy', sql.NVarChar(200), auth.email)
+      .query(`
+        MERGE dbo.events AS t
+        USING (SELECT @id AS id) AS s ON t.id = s.id
+        WHEN MATCHED THEN UPDATE SET
+          title=@title, date=@date, time=@time, venue=@venue, neighborhood=@neighborhood,
+          blurb=@blurb, status=@status, level=@level, cadence=@cadence, hidden=@hidden,
+          updated_by=@updatedBy, updated_at=sysutcdatetime()
+        WHEN NOT MATCHED THEN INSERT
+          (id, title, date, time, venue, neighborhood, blurb, status, level, cadence, hidden, updated_by, created_at, updated_at)
+          VALUES (@id, @title, @date, @time, @venue, @neighborhood, @blurb, @status, @level, @cadence, @hidden, @updatedBy, sysutcdatetime(), sysutcdatetime());
+      `);
+
+    return json({ ok: true, id, event: rowToEvent({ id, ...vals }) });
   },
 });
 
@@ -86,10 +135,12 @@ app.http('eventsAdminDelete', {
   authLevel: 'anonymous',
   handler: async (request) => {
     if (!configured()) return notConfigured();
+    const auth = await authorize(request);
+    if (!auth.ok) return forbidden(auth.reason);
     const id = new URL(request.url).searchParams.get('id');
     if (!id) return json({ error: 'bad_request', message: 'id query param required.' }, 400);
-    const t = await table('events');
-    await t.deleteEntity(PK, id).catch(() => {});
+    const p = await pool();
+    await p.request().input('id', sql.NVarChar(60), id).query('DELETE FROM dbo.events WHERE id = @id');
     return json({ ok: true, id });
   },
 });

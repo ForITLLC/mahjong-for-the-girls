@@ -46,7 +46,9 @@ const materials = [
 export default function Learn() {
   return (
     <>
-      <Nav />
+      <div className="no-print">
+        <Nav />
+      </div>
       <main>
         {/* hero */}
         <section className="no-print mx-auto max-w-5xl px-6 pb-12 pt-16 text-center">
@@ -110,7 +112,9 @@ export default function Learn() {
         {/* the on-page, printable guide */}
         <LearnGuide />
       </main>
-      <Footer />
+      <div className="no-print">
+        <Footer />
+      </div>
     </>
   );
 }

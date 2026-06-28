@@ -50,8 +50,15 @@ const blankContact = (): ContactRow => ({
   id: empty, name: empty, email: empty, phone: empty, status: 'new', notes: empty, source: 'manual',
 });
 
+// Access decision. SWA gates /admin on the `authenticated` role (any Microsoft
+// sign-in), then the API enforces the real allowlist (ForIT domains + Caroline,
+// plus dbo.staff) and returns 403 to anyone else. We probe one admin endpoint to
+// learn which case we're in: ok | forbidden | unconfigured (DB not wired) | offline.
+type Access = 'checking' | 'ok' | 'forbidden' | 'unconfigured' | 'offline';
+
 export default function AdminApp() {
   const [me, setMe] = useState<Principal>(undefined as unknown as Principal);
+  const [access, setAccess] = useState<Access>('checking');
   const [tab, setTab] = useState<'events' | 'contacts'>('events');
 
   useEffect(() => {
@@ -60,6 +67,19 @@ export default function AdminApp() {
       .then((d) => setMe(d?.clientPrincipal ?? null))
       .catch(() => setMe(null));
   }, []);
+
+  // Once signed in, probe an admin endpoint to resolve access.
+  useEffect(() => {
+    if (!me) return;
+    fetch('/api/admin/events')
+      .then((r) => {
+        if (r.ok) setAccess('ok');
+        else if (r.status === 403) setAccess('forbidden');
+        else if (r.status === 503) setAccess('unconfigured');
+        else setAccess('offline');
+      })
+      .catch(() => setAccess('offline'));
+  }, [me]);
 
   // Loading identity
   if (me === (undefined as unknown as Principal)) {
@@ -74,13 +94,16 @@ export default function AdminApp() {
       </Shell>
     );
   }
-  const isEditor = me.userRoles?.includes('editor');
-  if (!isEditor) {
+  if (access === 'checking') {
+    return <Shell email={me.userDetails}><p className="text-mist">Checking your access…</p></Shell>;
+  }
+  // Signed in, but not on the allowlist.
+  if (access === 'forbidden') {
     return (
-      <Shell>
+      <Shell email={me.userDetails}>
         <p className="text-mist">
-          Signed in as <span className="text-ink">{me.userDetails}</span>, but you don&rsquo;t have
-          the <code>editor</code> role yet.
+          Signed in as <span className="text-ink">{me.userDetails}</span>, but this account
+          isn&rsquo;t on the admin list yet. Ask Ben to add you, then sign back in.
         </p>
         <a href="/logout" className="btn-ghost mt-4 text-sm">Sign out</a>
       </Shell>
@@ -139,7 +162,7 @@ function BackendBanner({ state }: { state: Backend }) {
   if (state === 'ok' || state === 'checking') return null;
   const msg =
     state === 'unconfigured'
-      ? 'Storage isn’t connected yet. Add the AZURE_STORAGE_CONNECTION app setting in the Static Web App configuration to start saving changes.'
+      ? 'The database isn’t connected yet. Add the SQL_CONNECTION_STRING app setting in the Static Web App configuration to start saving changes.'
       : 'The backend API isn’t live yet. Once it’s deployed, edits here will save.';
   return (
     <div className="mb-6 rounded-xl border border-coral-deep/40 bg-coral/15 px-4 py-3 text-sm text-coral-deep">

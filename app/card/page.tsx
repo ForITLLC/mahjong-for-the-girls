@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { site } from '../site.config';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 import InstagramIcon from '../components/InstagramIcon';
 import PrintButton from '../components/PrintButton';
 
@@ -41,7 +43,11 @@ const links = [
 
 export default function CardPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-12">
+    <>
+      <div className="no-print">
+        <Nav />
+      </div>
+      <main className="flex min-h-[82vh] items-center justify-center px-6 py-12">
       {/* Print-only: a full Letter sheet of ten 3.5×2in cut-out cards. */}
       <div className="card-sheet" aria-hidden="true">
         {Array.from({ length: CARDS_PER_SHEET }).map((_, i) => (
@@ -129,6 +135,10 @@ export default function CardPage() {
           <span>10 to a page, ready to cut</span>
         </div>
       </div>
-    </main>
+      </main>
+      <div className="no-print">
+        <Footer />
+      </div>
+    </>
   );
 }
