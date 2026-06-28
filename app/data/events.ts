@@ -44,7 +44,7 @@ const SLOTS: Slot[] = [
     anchor: '2026-06-25', // Thursday
     time: '6:30 PM',
     blurb:
-      'Our standing weeknight game. Wind down with tiles, snacks, and good company — beginners and regulars at the same table.',
+      'Our standing weeknight game. Tiles, snacks, and the girls — beginners and regulars at the same table, zero pressure. Come straight from work. ✨',
     level: 'All levels',
   },
   {
@@ -53,7 +53,7 @@ const SLOTS: Slot[] = [
     anchor: '2026-06-27', // Saturday
     time: '12:30 PM',
     blurb:
-      'A relaxed weekend session with plenty of daylight. The easiest place to start if you have never touched a tile.',
+      'A chilled weekend session with good daylight and better snacks. The easiest place to start if you’ve never touched a tile in your life. 🀄️',
     level: 'Beginners welcome',
   },
 ];

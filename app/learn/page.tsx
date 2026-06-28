@@ -58,8 +58,8 @@ export default function Learn() {
             <span className="italic text-gilt">start playing.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl leading-relaxed text-mist">
-            We made these and we&rsquo;re giving them away — no sign-up, no cost.
-            Each one is a web page that prints clean: open it, hit{' '}
+            We made these and we&rsquo;re giving them away — no sign-up, no cost,
+            no catch. 💌 Each one is a web page that prints clean: open it, hit{' '}
             <span className="whitespace-nowrap rounded bg-cream-deep px-1.5 py-0.5 text-sm text-ink">
               Print
             </span>

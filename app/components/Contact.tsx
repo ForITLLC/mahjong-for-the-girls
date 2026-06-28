@@ -49,13 +49,14 @@ export default function Contact() {
       <div className="mx-auto max-w-6xl px-6 py-24">
         <div className="grid gap-12 md:grid-cols-2 md:items-center">
           <div>
-            <p className="eyebrow">Contact</p>
+            <p className="eyebrow">Say hi</p>
             <h2 className="mt-4 font-display text-4xl font-light leading-tight md:text-5xl">
               Pull up a <span className="italic text-gilt">chair.</span>
             </h2>
             <p className="mt-6 max-w-prose leading-relaxed text-mist">
-              Want in on the next night, hosting a table of your own, or just
-              curious? Say hello. {site.host} reads every note.
+              Want in on the next night, thinking about hosting a table of your
+              own, or just nosy? Say hello — no wrong reason. {site.host} reads
+              every single note. 🫶
             </p>
           </div>
 

@@ -16,7 +16,7 @@ export default function Hero() {
 
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-24 md:pt-36 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
-          <p className="eyebrow rise">{site.city} · By invitation, never exclusive</p>
+          <p className="eyebrow rise">{site.city} · American mahjong 🀄️ for the girls</p>
 
           <h1 className="rise mt-6 font-display text-5xl font-light leading-[0.98] tracking-tight sm:text-7xl md:text-8xl">
             Mahjong,
@@ -25,17 +25,17 @@ export default function Hero() {
           </h1>
 
           <p className="rise mt-8 max-w-prose text-lg leading-relaxed text-mist md:text-xl">
-            Beautiful nights. Real tables. Your kind of people. We bring the
-            tiles, the room, and the women who make a Tuesday feel like
-            somewhere you'd want to be — across {site.city}.
+            Unserious mahjong, seriously good rooms. We bring the tiles, the
+            snacks, and the girls — you bring a yes. Phones go down, friends get
+            made, and somehow it’s suddenly midnight. ✨
           </p>
 
           <div className="rise mt-10 flex flex-wrap items-center gap-4">
             <a href="#events" className="btn-gold">
-              See upcoming nights
+              See the next night
             </a>
             <a href="#contact" className="btn-ghost">
-              Pull up a chair
+              Save me a seat 🫶
             </a>
           </div>
 

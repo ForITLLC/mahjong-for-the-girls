@@ -19,10 +19,10 @@ const jost = Jost({
 
 export const metadata: Metadata = {
   title: `${site.name} — ${site.city}`,
-  description: `Mahjong, curated for women in ${site.city}. Beautiful nights, real tables, your kind of people. ${site.tagline}`,
+  description: `Unserious American mahjong for the girls in ${site.city} 🀄️ Lessons, play, and events — vibe-curated, beginner-friendly, zero pressure. Phones down, friends made. ${site.tagline}`,
   openGraph: {
     title: `${site.name} — ${site.city}`,
-    description: `Mahjong, curated for women in ${site.city}. ${site.tagline}`,
+    description: `Unserious American mahjong for the girls in ${site.city}. Lessons, play, and events. Come make friends. ${site.tagline}`,
     type: 'website',
   },
 };

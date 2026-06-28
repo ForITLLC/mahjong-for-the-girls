@@ -2,7 +2,7 @@
 
 export const site = {
   name: 'Mahjong for the Girls',
-  tagline: 'A table is waiting.',
+  tagline: 'Phones down, tiles up.',
   city: 'Seattle',
   // Contact address is base64-encoded and assembled in the browser at runtime
   // (see app/lib/email.ts) so the plaintext never ships in the static HTML —

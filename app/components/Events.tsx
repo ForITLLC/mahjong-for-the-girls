@@ -64,9 +64,9 @@ export default function Events() {
           </h2>
         </div>
         <p className="max-w-sm text-sm leading-relaxed text-mist">
-          We play every other week — Thursday evenings at 6:30 and Saturday
-          afternoons at 12:30. Tap RSVP — Going, Maybe, or Can’t — and we’ll hold
-          your chair.
+          We play every other week — Thursday evenings at 6:30, Saturday
+          afternoons at 12:30. Tap RSVP — going, maybe, or can’t — and your chair
+          is held. No flaking guilt, we get it. 💌
         </p>
       </div>
 
@@ -124,8 +124,9 @@ export default function Events() {
           None of these <span className="italic text-gilt">work?</span>
         </h3>
         <p className="max-w-md text-sm leading-relaxed text-mist">
-          The tables roll every other week, and we add nights as more of you turn
-          up. Tell us when you’re free and we’ll save you a seat at the next one.
+          No stress — tables roll every other week and we add nights as more of
+          you show up. Tell us when you’re free and we’ll save you a seat at the
+          next one. ✨
         </p>
         <ExpressInterest label="Express interest" />
       </div>

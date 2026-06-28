@@ -58,9 +58,9 @@ export default function Invite() {
         </p>
 
         <p className="mx-auto mt-5 max-w-md leading-relaxed text-mist">
-          Beautiful nights, real tables, your kind of people.
-          <br className="hidden sm:block" /> Beginners welcome — we&rsquo;ll teach
-          you.
+          Unserious mahjong, seriously good rooms, your kind of girls.
+          <br className="hidden sm:block" /> Total beginner? Perfect — we&rsquo;ll
+          teach you. 💖
         </p>
 
         {/* a glimpse of the table — prints with the poster */}
@@ -87,7 +87,7 @@ export default function Invite() {
           href="/?utm_source=invite&utm_medium=web&utm_campaign=printables#events"
           className="btn-gold text-base"
         >
-          Pick a night &amp; save your seat
+          Pick a night &amp; save your seat 🫶
         </a>
 
         {/* QR for in-person scans */}

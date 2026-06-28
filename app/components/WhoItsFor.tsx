@@ -1,8 +1,8 @@
 const lines = [
-  'The newcomer who just moved to Seattle and wants a real table to sit at.',
-  'The regular who already loves the game and wants more nights to play it.',
-  'The friend group looking for a ritual that isn’t another dinner reservation.',
-  'The woman who’s done waiting for someone else to organize the fun.',
+  'Just moved to Seattle and looking for your people? Hi, it’s us. 👋',
+  'Already obsessed with the game and want more nights to play it? Same.',
+  'A friend group that needs a ritual that isn’t another dinner reservation.',
+  'Done waiting around for someone else to plan the fun? Be the someone.',
 ];
 
 export default function WhoItsFor() {
@@ -15,12 +15,12 @@ export default function WhoItsFor() {
             <h2 className="mt-4 font-display text-4xl font-light leading-tight md:text-5xl">
               If you’ve read this far,
               <br />
-              <span className="italic text-gilt">it’s for you.</span>
+              <span className="italic text-gilt">it’s for you. 💖</span>
             </h2>
             <p className="mt-6 max-w-prose leading-relaxed text-mist">
-              Mahjong for the Girls is women-first and warmth-first. Every
+              Mahjong for the Girls is girls-first and warmth-first — every
               level, every neighborhood, every kind of week. You don’t need a
-              partner, a deck, or a clue — just a yes.
+              partner, a deck, or a single clue. Just a yes.
             </p>
           </div>
 

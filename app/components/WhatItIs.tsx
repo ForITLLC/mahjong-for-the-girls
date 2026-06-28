@@ -3,27 +3,27 @@
 const pillars = [
   {
     tile: '中',
-    title: 'The game, properly taught',
-    body: "American mahjong, the way your grandmother's friends played and the way Capitol Hill plays now. Come knowing nothing — we'll have you calling tiles by the second round.",
+    title: 'Zero clue? Perfect.',
+    body: "American mahjong, the way your grandma's friends played and the way Capitol Hill plays now. Show up knowing literally nothing — we'll have you calling tiles by the second round, promise.",
   },
   {
     tile: '發',
-    title: 'Rooms worth showing up for',
-    body: 'Rooftops at golden hour, back rooms of your favorite café, the occasional living room that feels like a secret. The setting is half the point.',
+    title: 'Vibe-curated rooms',
+    body: 'Rooftops at golden hour, the back room of your favorite café, a living room that feels like a little secret — and always a snack situation. The setting is half the point. 🧀',
   },
   {
     tile: '東',
-    title: 'A table, not a transaction',
-    body: 'No app to download, no leaderboard to climb. Just a standing invitation to sit down, play, and leave with new numbers in your phone.',
+    title: 'Phones down, friends up',
+    body: 'No app to download, no leaderboard to climb, no pressure to be good. Just a standing invite to sit down, play, and leave with new favorite people. 🫶',
   },
 ];
 
 export default function WhatItIs() {
   return (
     <section id="what" className="mx-auto max-w-6xl px-6 py-24">
-      <p className="eyebrow">What it is</p>
+      <p className="eyebrow">The vibe</p>
       <h2 className="mt-4 max-w-prose font-display text-4xl font-light leading-tight md:text-5xl">
-        A mahjong night you'd <span className="italic text-gilt">actually</span>{' '}
+        A mahjong night you’d <span className="italic text-gilt">actually</span>{' '}
         clear your calendar for.
       </h2>
 

@@ -25,14 +25,15 @@ export default function Gallery() {
     <section id="gallery" className="mx-auto max-w-6xl px-6 py-24">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">From the table</p>
+          <p className="eyebrow">The photo dump</p>
           <h2 className="mt-4 font-display text-4xl font-light leading-tight md:text-5xl">
             A real <span className="italic text-gilt">night.</span>
           </h2>
         </div>
         <p className="max-w-sm text-sm leading-relaxed text-mist">
-          Good light, a long spread, and a room full of women playing. This is
-          what an afternoon at the table actually looks like.
+          Good light, a serious snack spread, and a room full of girls playing.
+          No filter needed — this is what an afternoon at the table actually
+          looks like. 📸
         </p>
       </div>
 
