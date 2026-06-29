@@ -15,11 +15,11 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-24 md:pt-36 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-24 md:pt-36 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="eyebrow rise">{site.city} · American mahjong 🀄️ for the girls</p>
 
-          <h1 className="rise mt-6 font-display text-5xl font-light leading-[0.98] tracking-tight sm:text-7xl md:text-8xl">
+          <h1 className="rise mt-6 font-display text-5xl font-light leading-[0.98] tracking-tight sm:text-6xl md:text-7xl">
             Mahjong,
             <br />
             <span className="text-gilt italic">for the girls.</span>
@@ -53,8 +53,8 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Flavor of the month — the current seasonal poster, contained so it
-            advertises the next night without taking over the page. */}
+        {/* Flavor of the month — the current seasonal poster, sized to lead the
+            hero. It's the page's centerpiece; the archive lives on /learn. */}
         <SeasonalPoster />
       </div>
       <div className="rule mx-auto max-w-6xl" />
