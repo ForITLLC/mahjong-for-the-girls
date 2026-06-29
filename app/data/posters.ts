@@ -9,7 +9,8 @@
 //
 // To add a season:
 //   1. drop a clean (text-free) background at public/img/posters/bg/<id>.png
-//   2. add the id to scripts/gen-poster-qr.sh and run it (mints the QR)
+//   2. add the id (and its accent) to scripts/gen-qr.py and run it (mints the
+//      branded, decode-verified QR)
 //   3. prepend an entry here (newest first) and move `current: true` onto it
 //   4. run scripts/export-posters.sh to refresh the shareable JPG
 
@@ -69,7 +70,7 @@ export const currentPoster = posters.find((p) => p.current) ?? posters[0];
 export const posterRsvpUrl = (id: string) =>
   `https://mahjongforthegirls.com/?utm_source=poster&utm_medium=qr&utm_campaign=${id}#events`;
 
-// Static QR asset, minted by scripts/gen-poster-qr.sh.
+// Static branded QR asset, minted & decode-verified by scripts/gen-qr.py.
 export const posterQrSrc = (id: string) => `/img/posters/qr/${id}.svg`;
 
 // The shareable, downloadable flat image (1080×1350), exported from <Poster>

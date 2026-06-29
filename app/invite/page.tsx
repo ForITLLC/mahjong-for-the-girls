@@ -95,7 +95,7 @@ export default function Invite() {
           <div className="rounded-2xl border border-ink/10 bg-white p-4 shadow-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/img/qr-events.png"
+              src="/img/qr-events.svg"
               alt="Scan to see upcoming tables and RSVP"
               className="h-40 w-40"
             />

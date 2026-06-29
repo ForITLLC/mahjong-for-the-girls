@@ -349,7 +349,7 @@ export default function LearnGuide() {
             <div className="rounded-2xl bg-white p-3 shadow-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/img/qr-events.png"
+                src="/img/qr-events.svg"
                 alt="Scan to see upcoming tables and RSVP"
                 className="h-28 w-28"
               />

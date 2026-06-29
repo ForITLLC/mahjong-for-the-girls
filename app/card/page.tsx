@@ -60,7 +60,7 @@ export default function CardPage() {
               <p className="card-cell-tag">{site.tagline}</p>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="card-cell-qr" src="/img/qr-events.png" alt="" />
+            <img className="card-cell-qr" src="/img/qr-events.svg" alt="" />
             <div className="card-cell-meta">
               <p className="card-cell-url">mahjongforthegirls.com</p>
               <p className="card-cell-handle">{site.instagramHandle}</p>
