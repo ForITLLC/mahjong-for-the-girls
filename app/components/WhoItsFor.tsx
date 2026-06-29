@@ -1,6 +1,6 @@
 const lines = [
   'Just moved to Seattle and looking for your people? Hi, it’s us. 👋',
-  'Already obsessed with the game and want more nights to play it? Same.',
+  'Already obsessed with the game and want more nights to play it? Same. 🀄️',
   'A friend group that needs a ritual that isn’t another dinner reservation.',
   'Done waiting around for someone else to plan the fun? Be the someone.',
 ];

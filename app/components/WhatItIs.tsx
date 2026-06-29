@@ -4,7 +4,7 @@ const pillars = [
   {
     tile: '中',
     title: 'Zero clue? Perfect.',
-    body: "American mahjong, the way your grandma's friends played and the way Capitol Hill plays now. Show up knowing literally nothing — we'll have you calling tiles by the second round, promise.",
+    body: "American mahjong, the way your grandma's friends played and the way Capitol Hill plays now. 🌶️ Show up knowing literally nothing — we'll have you calling tiles by the second round, promise.",
   },
   {
     tile: '發',
@@ -21,10 +21,10 @@ const pillars = [
 export default function WhatItIs() {
   return (
     <section id="what" className="mx-auto max-w-6xl px-6 py-24">
-      <p className="eyebrow">The vibe</p>
+      <p className="eyebrow">The vibe ✨</p>
       <h2 className="mt-4 max-w-prose font-display text-4xl font-light leading-tight md:text-5xl">
         A mahjong night you’d <span className="italic text-gilt">actually</span>{' '}
-        clear your calendar for.
+        clear your calendar for. 🗓️
       </h2>
 
       <div className="mt-16 grid gap-px overflow-hidden rounded-2xl bg-ink/10 md:grid-cols-3">

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import LearnGuide from '../components/LearnGuide';
+import Poster from '../components/Poster';
 import { site } from '../site.config';
 import { posters } from '../data/posters';
 
@@ -90,8 +91,9 @@ export default function Learn() {
               </h2>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-mist">
-              Every night gets its own poster. Save one, drop it in the group
-              chat, pin it up — they’re made to be shared. 💌
+              Every night gets its own poster — composed live in our own type,
+              each with a scan-to-RSVP code. Tap one, send it to the group chat,
+              screenshot to share. 💌
             </p>
           </div>
 
@@ -99,20 +101,12 @@ export default function Learn() {
             {posters.map((p) => (
               <a
                 key={p.id}
-                href={p.image}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
+                href={`/poster/${p.id}/`}
                 className="group relative block overflow-hidden rounded-2xl border border-ink/10 bg-white/70 shadow-sm transition-shadow hover:shadow-md"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={p.image}
-                  alt={`${p.title} — ${p.tagline}`}
-                  className="aspect-[4/5] w-full object-cover"
-                />
+                <Poster poster={p} className="rounded-2xl" />
                 {p.current && (
-                  <span className="absolute left-3 top-3 rounded-full bg-coral-deep px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wider text-white shadow">
+                  <span className="absolute right-3 top-3 z-10 rounded-full bg-coral-deep px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wider text-white shadow">
                     This season
                   </span>
                 )}
@@ -122,7 +116,7 @@ export default function Learn() {
                     <p className="text-xs text-mist">{p.tagline}</p>
                   </div>
                   <span className="whitespace-nowrap text-sm text-sage-deep opacity-0 transition-opacity group-hover:opacity-100">
-                    Save ↓
+                    Open →
                   </span>
                 </div>
               </a>

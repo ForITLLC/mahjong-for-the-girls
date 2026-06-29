@@ -22,7 +22,7 @@ export default function Hero() {
           <h1 className="rise mt-6 font-display text-5xl font-light leading-[0.98] tracking-tight sm:text-6xl md:text-7xl">
             Mahjong,
             <br />
-            <span className="text-gilt italic">for the girls.</span>
+            <span className="text-rouge italic">for the girls.</span>
           </h1>
 
           <p className="rise mt-8 max-w-prose text-lg leading-relaxed text-mist md:text-xl">

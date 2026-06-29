@@ -81,6 +81,15 @@ body {
   color: transparent;
 }
 
+/* Red display accent — the vivid flower-red "for the girls" punch line. Kept
+   distinct from .text-gilt (which is coral) so the hero reads unmistakably red. */
+.text-rouge {
+  background: linear-gradient(120deg, var(--mg-red), #c43747 65%, #a82637);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 /* Decorative tile chip — cream tile with a soft sage shadow */
 .tile {
   display: inline-flex;

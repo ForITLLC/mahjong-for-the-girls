@@ -60,7 +60,7 @@ export default function Events() {
         <div>
           <p className="eyebrow">The calendar</p>
           <h2 className="mt-4 font-display text-4xl font-light leading-tight md:text-5xl">
-            Upcoming <span className="italic text-gilt">nights</span>
+            Upcoming <span className="italic text-gilt">nights</span> 🌙
           </h2>
         </div>
         <p className="max-w-sm text-sm leading-relaxed text-mist">
