@@ -25,6 +25,7 @@ Re-run whenever the poster set or a target URL changes:
 
     python3 scripts/gen-qr.py
 """
+import json
 import os
 import subprocess
 import sys
@@ -35,6 +36,12 @@ import qrcode
 from qrcode.constants import ERROR_CORRECT_H
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 馬 brand mark as a baked vector outline (Songti serif, extracted once) so the
+# center mark renders identically everywhere — no CJK font needed on the viewer's
+# device or printer. Y-up font units; we flip + scale it into the tile below.
+_MA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  "ma-glyph.json")))
 
 # --- brand palette ---------------------------------------------------------
 INK = "#2f4138"     # deep pine — data modules + 馬 glyph
@@ -50,9 +57,17 @@ LOGO_FRAC = 0.13    # center brand-tile size, as a fraction of the QR width
 TILE_PAD = 0.40     # tile bleed beyond the logo window (<0.5 → never covers a
                     # neighbor module's center, so data fidelity stays perfect)
 
-# A CJK-capable serif stack so 馬 renders the same way the rest of the site's
-# brand mark does (the footer already ships 馬 as a text glyph).
-GLYPH_FONT = "Fraunces, Georgia, 'Songti SC', 'Noto Serif CJK SC', 'PingFang SC', serif"
+
+def ma_glyph(cx, cy, target):
+    """馬 outline, scaled to `target` modules wide/tall and centered at (cx, cy)."""
+    xmin, ymin, xmax, ymax = _MA["bbox"]
+    gw, gh = xmax - xmin, ymax - ymin
+    s = target / max(gw, gh)
+    gcx, gcy = xmin + gw / 2, ymin + gh / 2
+    return (
+        f'<g transform="translate({cx:.3f} {cy:.3f}) scale({s:.5f} {-s:.5f}) '
+        f'translate({-gcx:.3f} {-gcy:.3f})"><path d="{_MA["path"]}" fill="{INK}"/></g>'
+    )
 
 
 def finder_origins(n):
@@ -125,11 +140,7 @@ def build_svg(url, accent):
     p.append(rrect(tx + 0.28, ty + 0.28, tw - 0.56, tw - 0.56, (tw - 0.56) * 0.22,
                    stroke=accent, sw=0.55))
     cx = cy = q + lo + lg / 2
-    p.append(
-        f'<text x="{cx:.3f}" y="{cy:.3f}" font-family="{GLYPH_FONT}" '
-        f'font-size="{lg * 0.74:.3f}" font-weight="500" fill="{INK}" '
-        f'text-anchor="middle" dominant-baseline="central">馬</text>'
-    )
+    p.append(ma_glyph(cx, cy, lg * 0.72))
     p.append("</svg>")
     return "\n".join(p), m, n, lo, lg
 
