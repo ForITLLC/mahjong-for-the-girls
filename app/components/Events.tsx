@@ -110,6 +110,14 @@ export default function Events() {
                 <p className="mt-3 max-w-prose leading-relaxed text-mist">
                   {ev.blurb}
                 </p>
+                <a
+                  href={`/event/${ev.id}/`}
+                  target="_blank"
+                  rel="noopener"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-pool-deep underline-offset-4 hover:underline"
+                >
+                  See the poster →
+                </a>
               </div>
 
               <RsvpButton ev={ev} />

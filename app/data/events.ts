@@ -82,8 +82,8 @@ function upcomingDates(anchorISO: string, count: number): string[] {
   return out;
 }
 
-export const events: MahjongEvent[] = SLOTS.flatMap((slot) =>
-  upcomingDates(slot.anchor, UPCOMING_PER_SLOT).map((date) => ({
+function eventFromSlot(slot: Slot, date: string): MahjongEvent {
+  return {
     id: `${slot.key}-${date}`,
     title: slot.title,
     date,
@@ -91,8 +91,47 @@ export const events: MahjongEvent[] = SLOTS.flatMap((slot) =>
     venue: 'Address shared when you RSVP',
     neighborhood: 'Seattle',
     blurb: slot.blurb,
-    status: 'open' as EventStatus,
+    status: 'open',
     level: slot.level,
     cadence: 'Every other week',
-  }))
+  };
+}
+
+export const events: MahjongEvent[] = SLOTS.flatMap((slot) =>
+  upcomingDates(slot.anchor, UPCOMING_PER_SLOT).map((date) =>
+    eventFromSlot(slot, date)
+  )
 ).sort((a, b) => a.date.localeCompare(b.date));
+
+const SLOT_BY_KEY: Record<string, Slot> = Object.fromEntries(
+  SLOTS.map((s) => [s.key, s])
+);
+
+// Resolve an event id (e.g. 'thu-2026-07-09') back to its full event by parsing
+// the encoded date and looking up its slot. The id carries the date, so the
+// per-event poster permalink (/event/[id]) can render ANY night without relying
+// on the runtime "upcoming" window — robust to the rolling 14-day cadence.
+export function eventFromId(id: string): MahjongEvent | null {
+  const m = id.match(/^([a-z]+)-(\d{4}-\d{2}-\d{2})$/);
+  if (!m) return null;
+  const slot = SLOT_BY_KEY[m[1]];
+  return slot ? eventFromSlot(slot, m[2]) : null;
+}
+
+// A wide window of event ids for static generation of the poster permalinks
+// (output: 'export' must enumerate them at build time). Deliberately generous —
+// ~15 months per slot — so every link the live calendar can produce stays valid
+// well past a deploy. Each deploy refreshes the window.
+export function eventPosterParams(): { id: string }[] {
+  const STEPS = 40; // ~15 months at the 14-day cadence
+  const out: { id: string }[] = [];
+  for (const slot of SLOTS) {
+    const [ay, am, ad] = slot.anchor.split('-').map(Number);
+    const cursor = new Date(ay, am - 1, ad);
+    for (let i = 0; i < STEPS; i++) {
+      out.push({ id: `${slot.key}-${toISO(cursor)}` });
+      cursor.setDate(cursor.getDate() + INTERVAL_DAYS);
+    }
+  }
+  return out;
+}
