@@ -5,22 +5,30 @@ module.exports = {
     extend: {
       colors: {
         // Brand palette for "Mahjong for the Girls" — sampled from the
-        // @mahjongforthegirls Instagram profile pic, defined as CSS vars in
+        // @mahjongforthegirls logo + pool-party poster, defined as CSS vars in
         // app/globals.css so the whole site can be re-themed from one place.
         ink: 'var(--mg-ink)',
-        // New palette names (sage / coral / red / cream)
-        sage: 'var(--mg-sage)',
-        'sage-deep': 'var(--mg-sage-deep)',
+        // Signature pool-party palette
+        pool: 'var(--mg-pool)',
+        'pool-soft': 'var(--mg-pool-soft)',
+        'pool-deep': 'var(--mg-pool-deep)',
+        magenta: 'var(--mg-magenta)',
+        'magenta-deep': 'var(--mg-magenta-deep)',
         coral: 'var(--mg-coral)',
         'coral-deep': 'var(--mg-coral-deep)',
+        orange: 'var(--mg-orange)',
         red: 'var(--mg-red)',
         lime: 'var(--mg-lime)',
+        'lime-deep': 'var(--mg-lime-deep)',
+        gold: 'var(--mg-gold)',
+        pink: 'var(--mg-pink)',
         cream: 'var(--mg-cream)',
         'cream-deep': 'var(--mg-cream-deep)',
         // Legacy aliases (kept so existing class names keep resolving)
+        sage: 'var(--mg-sage)',
+        'sage-deep': 'var(--mg-sage-deep)',
         jade: 'var(--mg-jade)',
         'jade-deep': 'var(--mg-jade-deep)',
-        gold: 'var(--mg-gold)',
         'gold-soft': 'var(--mg-gold-soft)',
         bone: 'var(--mg-bone)',
         rouge: 'var(--mg-rouge)',

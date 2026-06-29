@@ -44,8 +44,8 @@ _MA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                   "ma-glyph.json")))
 
 # --- brand palette ---------------------------------------------------------
-INK = "#2f4138"     # deep pine — data modules + 馬 glyph
-EYE = "#436a57"     # deep sage — finder eyes
+INK = "#0b4a58"     # deep teal — data modules + 馬 glyph
+EYE = "#0c7f92"     # deep pool — finder eyes
 FIELD = "#ffffff"   # QR light field — max contrast for reliable scans
 
 # --- geometry (empirically tuned: rounded but robustly decodable) ----------
@@ -201,16 +201,16 @@ def real_decodes(svg, url):
 POSTER_BASE = ("https://mahjongforthegirls.com/"
                "?utm_source=poster&utm_medium=qr&utm_campaign={id}#events")
 POSTERS = [  # keep in sync with app/data/posters.ts (id, accent)
-    ("summer-2026", "#ff7a3c"),
-    ("disco", "#ffd15c"),
-    ("wild", "#ff5fa0"),
-    ("brunch", "#f5803a"),
+    ("summer-2026", "#ec2a8c"),
+    ("disco", "#ffd24a"),
+    ("wild", "#aee04a"),
+    ("brunch", "#f7a64b"),
 ]
 # Shared print QR (invite + cards + learn guide). URL unchanged from the PNG it
 # replaces, so GA4 attribution is preserved.
 EVENTS_URL = ("https://www.mahjongforthegirls.com/"
               "?utm_source=qr&utm_medium=print&utm_campaign=invite#events")
-EVENTS_ACCENT = "#ec7c63"  # brand coral-deep
+EVENTS_ACCENT = "#1fb0c4"  # brand pool turquoise
 
 
 def main():

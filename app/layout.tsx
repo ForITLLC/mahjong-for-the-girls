@@ -1,14 +1,16 @@
 import type { Metadata, Viewport } from 'next';
-import { Fraunces, Jost } from 'next/font/google';
+import { Baloo_2, Jost } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import { site } from './site.config';
 
-const fraunces = Fraunces({
+// Rounded, chunky "bubble" display face to match the @mahjongforthegirls logo
+// lettering. Replaces the old serif so headlines read playful, not formal.
+const baloo = Baloo_2({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-display',
-  axes: ['opsz', 'SOFT', 'WONK'],
+  weight: ['400', '500', '600', '700', '800'],
 });
 
 const jost = Jost({
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#f6f1e5',
+  themeColor: '#1fb0c4',
 };
 
 export default function RootLayout({
@@ -37,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${jost.variable}`}>
+    <html lang="en" className={`${baloo.variable} ${jost.variable}`}>
       <body className="bg-field min-h-screen">{children}</body>
       {/* Google Analytics 4 — loads after the page is interactive */}
       <Script

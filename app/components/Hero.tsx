@@ -33,13 +33,13 @@ export default function Hero() {
         aria-hidden="true"
         style={{
           background:
-            'linear-gradient(90deg, rgba(20,28,24,0.88) 0%, rgba(20,28,24,0.68) 38%, rgba(20,28,24,0.32) 70%, rgba(20,28,24,0.14) 100%), linear-gradient(180deg, rgba(20,28,24,0.28) 0%, rgba(20,28,24,0.08) 46%, rgba(20,28,24,0.52) 100%)',
+            'linear-gradient(90deg, rgba(6,40,49,0.92) 0%, rgba(6,40,49,0.86) 46%, rgba(6,40,49,0.70) 62%, rgba(6,40,49,0.34) 84%, rgba(6,40,49,0.12) 100%), linear-gradient(180deg, rgba(6,40,49,0.32) 0%, rgba(6,40,49,0.22) 46%, rgba(6,40,49,0.55) 100%)',
         }}
       />
 
       <div className="mx-auto w-full max-w-6xl px-6 py-24 md:py-28">
         <div className="max-w-2xl">
-          <p className="rise text-[0.72rem] uppercase tracking-[0.32em] text-cream/85">
+          <p className="rise text-[0.72rem] uppercase tracking-[0.32em] text-cream/90 drop-shadow-[0_1px_8px_rgba(6,40,49,0.8)]">
             {site.city} · American mahjong 🀄️ for the girls
           </p>
 
@@ -51,18 +51,19 @@ export default function Hero() {
             🀄️ Flavor of the month · {p.season}
           </p>
 
-          <h1 className="rise mt-6 font-display text-5xl font-light leading-[0.98] tracking-tight text-cream drop-shadow-[0_2px_20px_rgba(0,0,0,0.5)] sm:text-6xl md:text-7xl">
+          <h1 className="rise mt-6 font-display text-6xl font-extrabold leading-[0.92] tracking-tight text-cream drop-shadow-[0_2px_20px_rgba(0,0,0,0.5)] sm:text-7xl md:text-8xl">
             Mahjong,
             <br />
-            <span className="text-rouge italic">for the girls.</span>
+            <span className="text-rouge">for the girls.</span>
           </h1>
 
           {/* the season's own headline + tagline, riding under the brand line */}
-          <p className="rise mt-5 font-display text-2xl italic leading-snug text-cream/95 drop-shadow-[0_1px_10px_rgba(0,0,0,0.45)] md:text-3xl">
-            <span style={{ color: p.accent }}>{p.title}.</span> {p.tagline}
+          <p className="rise mt-5 font-display text-2xl font-bold leading-snug text-cream drop-shadow-[0_2px_12px_rgba(6,40,49,0.7)] md:text-3xl">
+            <span style={{ color: p.accent }}>{p.title}.</span>{' '}
+            <span className="font-medium">{p.tagline}</span>
           </p>
 
-          <p className="rise mt-6 max-w-prose text-lg leading-relaxed text-cream/85">
+          <p className="rise mt-6 max-w-prose text-lg leading-relaxed text-cream drop-shadow-[0_2px_12px_rgba(6,40,49,0.85)]">
             Unserious mahjong, seriously good rooms. We bring the tiles, the
             snacks, and the girls — you bring a yes. Phones go down, friends get
             made, and somehow it’s suddenly midnight. ✨

@@ -3,29 +3,39 @@
 @tailwind utilities;
 
 :root {
-  /* Brand palette sampled directly from the @mahjongforthegirls Instagram
-     profile picture (a sage-green mahjong scarf with a coral center, vivid
-     flower-red blooms and cream linework). Re-theme the whole site from here. */
-  --mg-sage: #7aa48e; /* soft sage green — the field of the scarf */
-  --mg-sage-deep: #436a57; /* deeper sage — headings, links */
-  --mg-coral: #f4a895; /* salmon/coral — the center diamond */
-  --mg-coral-deep: #ec7c63; /* warm coral — primary buttons */
-  --mg-red: #e2495a; /* vivid flower red — accents & badges */
-  --mg-cream: #f6f1e5; /* ivory linework — page background */
-  --mg-cream-deep: #ece4d2; /* slightly deeper cream — panels */
-  --mg-ink: #2f4138; /* deep pine — primary text */
+  /* Brand palette — sampled directly from the @mahjongforthegirls logo and the
+     "Hot Mahj Summer" poster: a bright turquoise pool, a coral→orange badge
+     ring, hot-magenta + lime display type, chili-red and citrus accents.
+     Re-theme the whole site from here. */
+  --mg-pool: #1fb0c4; /* bright pool turquoise — the signature surface */
+  --mg-pool-soft: #7fd6e0; /* shallow-end turquoise — soft fills */
+  --mg-pool-deep: #0c7f92; /* deep pool — headings, links, eyebrows */
+  --mg-magenta: #ec2a8c; /* hot pink — display punch ("Margaritas") */
+  --mg-magenta-deep: #c81a72;
+  --mg-coral: #f58a72; /* salmon-coral — the logo ring */
+  --mg-coral-deep: #ef6a52; /* warm coral — primary buttons */
+  --mg-orange: #f7a64b; /* citrus orange */
+  --mg-lime: #aee04a; /* chartreuse — playful accent */
+  --mg-lime-deep: #6fa72a; /* deeper lime that reads as text on cream */
+  --mg-red: #f23048; /* chili red — accents & badges */
+  --mg-gold: #ffd24a; /* lemon-gold highlight */
+  --mg-pink: #f8ccd2; /* pale pink — soft headline tint */
+  --mg-cream: #fff6ef; /* warm white — page background */
+  --mg-cream-deep: #ffe7d8; /* peachy cream — panels */
+  --mg-ink: #0b4a58; /* deep teal — primary text (reads as the pool) */
 
-  /* Legacy semantic aliases so existing class names keep resolving while the
-     values now point at the Instagram palette. */
-  --mg-jade: var(--mg-sage);
-  --mg-jade-deep: var(--mg-sage-deep);
-  --mg-gold: var(--mg-coral-deep);
+  /* Semantic aliases so every existing class re-renders in the new world. The
+     workhorse tokens (sage/coral/cream/mist) now point at the pool palette. */
+  --mg-sage: var(--mg-pool);
+  --mg-sage-deep: var(--mg-pool-deep);
+  --mg-jade: var(--mg-pool);
+  --mg-jade-deep: var(--mg-pool-deep);
   --mg-gold-soft: var(--mg-coral);
   --mg-bone: var(--mg-cream);
   --mg-rouge: var(--mg-red);
-  --mg-mist: rgba(47, 65, 56, 0.62); /* muted secondary text on cream */
+  --mg-mist: rgba(11, 74, 88, 0.6); /* muted teal secondary text on cream */
 
-  --font-display: 'Fraunces', Georgia, serif;
+  --font-display: 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
   --font-sans: 'Jost', system-ui, sans-serif;
 }
 
@@ -44,13 +54,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* A soft, living gradient field behind the whole page — light & airy,
-   echoing the scarf: sage haze, a coral blush, a wash of cream. */
+/* A bright, living gradient field behind the whole page — a pool-party wash:
+   turquoise haze, a coral/citrus blush, a splash of lime, over warm white. */
 .bg-field {
   background:
-    radial-gradient(58rem 58rem at 10% -12%, rgba(122, 164, 142, 0.45), transparent 60%),
-    radial-gradient(46rem 46rem at 108% 4%, rgba(244, 168, 149, 0.45), transparent 58%),
-    radial-gradient(70rem 70rem at 82% 112%, rgba(226, 73, 90, 0.12), transparent 60%),
+    radial-gradient(58rem 58rem at 8% -12%, rgba(31, 176, 196, 0.35), transparent 60%),
+    radial-gradient(46rem 46rem at 110% 2%, rgba(245, 138, 114, 0.4), transparent 58%),
+    radial-gradient(40rem 40rem at 96% 90%, rgba(236, 42, 140, 0.14), transparent 60%),
+    radial-gradient(48rem 48rem at 4% 108%, rgba(174, 224, 74, 0.18), transparent 62%),
     var(--mg-cream);
 }
 
@@ -60,7 +71,7 @@ body {
   background: linear-gradient(
     to right,
     transparent,
-    rgba(67, 106, 87, 0.4),
+    rgba(31, 176, 196, 0.45),
     transparent
   );
 }
@@ -70,72 +81,73 @@ body {
   font-size: 0.72rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--mg-sage-deep);
+  color: var(--mg-pool-deep);
 }
 
-/* Coral gradient text for display accents (kept name .text-gilt) */
+/* Hot display-gradient text for accents (kept name .text-gilt) — magenta into
+   coral, the logo's pink-to-coral punch. */
 .text-gilt {
-  background: linear-gradient(120deg, var(--mg-coral), var(--mg-red) 70%, #c43747);
+  background: linear-gradient(120deg, var(--mg-magenta), var(--mg-coral-deep) 80%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Red display accent — the vivid flower-red "for the girls" punch line. Kept
-   distinct from .text-gilt (which is coral) so the hero reads unmistakably red. */
+/* Magenta→chili display accent — the "for the girls" punch line. Hotter than
+   .text-gilt so the hero reads as an unmistakable pop of pink-red. */
 .text-rouge {
-  background: linear-gradient(120deg, var(--mg-red), #c43747 65%, #a82637);
+  background: linear-gradient(120deg, var(--mg-magenta), var(--mg-red) 70%, #d61733);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Decorative tile chip — cream tile with a soft sage shadow */
+/* Decorative tile chip — bright white tile with a soft turquoise shadow */
 .tile {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 0.55rem;
-  background: linear-gradient(160deg, #fffdf8, #ece2cd);
-  color: var(--mg-sage-deep);
+  background: linear-gradient(160deg, #ffffff, #e6f7fa);
+  color: var(--mg-pool-deep);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -3px 6px rgba(67, 106, 87, 0.16),
-    0 8px 22px rgba(47, 65, 56, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -3px 6px rgba(12, 127, 146, 0.18),
+    0 8px 22px rgba(11, 74, 88, 0.18);
 }
 
-/* Primary button — warm coral (kept name .btn-gold) */
+/* Primary button — hot coral→magenta, the brand's headline pop (name .btn-gold) */
 .btn-gold {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  background: linear-gradient(120deg, var(--mg-coral), var(--mg-coral-deep));
+  background: linear-gradient(120deg, var(--mg-coral), var(--mg-magenta));
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
   padding: 0.85rem 1.6rem;
   border-radius: 999px;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
-  box-shadow: 0 10px 28px rgba(236, 124, 99, 0.35);
+  box-shadow: 0 10px 28px rgba(236, 42, 140, 0.32);
 }
 .btn-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 38px rgba(236, 124, 99, 0.46);
+  box-shadow: 0 16px 38px rgba(236, 42, 140, 0.45);
 }
 
 .btn-ghost {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid rgba(67, 106, 87, 0.32);
-  color: var(--mg-sage-deep);
+  border: 1px solid rgba(12, 127, 146, 0.34);
+  color: var(--mg-pool-deep);
   padding: 0.85rem 1.6rem;
   border-radius: 999px;
   transition: border-color 0.18s ease, background 0.18s ease;
 }
 .btn-ghost:hover {
-  border-color: var(--mg-sage-deep);
-  background: rgba(122, 164, 142, 0.12);
+  border-color: var(--mg-pool-deep);
+  background: rgba(31, 176, 196, 0.12);
 }
 
 /* Reveal-on-scroll-ish entrance (pure CSS, runs once on load) */

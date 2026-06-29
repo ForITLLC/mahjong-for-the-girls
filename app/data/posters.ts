@@ -33,7 +33,7 @@ export const posters: Poster[] = [
     title: 'It’s a Mahj Hot Summer',
     tagline: 'Mahjong margaritas, poolside tiles.',
     image: '/img/posters/bg/summer-2026.png',
-    accent: '#ff7a3c',
+    accent: '#ec2a8c',
     current: true,
   },
   {
@@ -42,7 +42,7 @@ export const posters: Poster[] = [
     title: 'Disco Mahj',
     tagline: 'A sparkly mahjong night.',
     image: '/img/posters/bg/disco.png',
-    accent: '#ffd15c',
+    accent: '#ffd24a',
   },
   {
     id: 'wild',
@@ -50,7 +50,7 @@ export const posters: Poster[] = [
     title: 'Mahj on the Wild Side',
     tagline: 'A walk on the wild side.',
     image: '/img/posters/bg/wild.png',
-    accent: '#ff5fa0',
+    accent: '#aee04a',
   },
   {
     id: 'brunch',
@@ -58,7 +58,7 @@ export const posters: Poster[] = [
     title: 'Rise & Mahj',
     tagline: 'Mimosas + mahjong.',
     image: '/img/posters/bg/brunch.png',
-    accent: '#f5803a',
+    accent: '#f7a64b',
   },
 ];
 
