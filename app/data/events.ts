@@ -1,8 +1,19 @@
-// The real cadence: Caroline runs two standing tables, every other week —
-// Thursday evenings at 6:30 and Saturday afternoons at 12:30. Rather than hand-
-// maintain a list, we generate the next few upcoming instances from each slot's
-// anchor date (her first real sessions) so the calendar stays current between
-// deploys. Edit the slots below to change the pattern.
+// The site calendar. Two sources, in priority order:
+//
+// 1. Caroline's REAL Partiful events, scraped at build time into
+//    partiful-events.generated.json (see scripts/scrape-partiful.mjs). Partiful
+//    doesn't publish a host's event list anywhere public, so the scraper reads
+//    the invite links she shares (scripts/partiful-sources.txt) and pulls each
+//    event's real title/date/time/location/RSVP-link. When that file has events,
+//    they ARE the calendar and each night's RSVP deep-links to Partiful.
+//
+// 2. A built-in standing cadence (fallback) — two tables every other week —
+//    so the section still renders if no Partiful links are configured yet.
+//
+// Either way, anything BEYOND what's scheduled is handled by the "express
+// interest" prompt in the Events section.
+
+import generatedEvents from './partiful-events.generated.json';
 
 export type EventStatus = 'open' | 'waitlist' | 'sold-out';
 
@@ -21,7 +32,64 @@ export interface MahjongEvent {
   level: 'All levels' | 'Beginners welcome' | 'Regulars';
   /** Shown as a small cue that this is a standing, recurring table */
   cadence: string;
+  /** When set (real Partiful events), RSVP deep-links here instead of the modal */
+  rsvpUrl?: string;
+  /** Event cover image (available to posters); optional */
+  image?: string;
+  /** IANA timezone the time is expressed in */
+  timezone?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Source 1 — Caroline's real Partiful events (scraped)
+// ---------------------------------------------------------------------------
+
+interface PartifulRecord {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  timezone: string;
+  venue: string;
+  description: string;
+  image: string | null;
+  rsvpUrl: string;
+  startDate: string;
+}
+
+// Keep a card blurb tidy: first paragraph of the Partiful description, capped.
+function cardBlurb(description: string): string {
+  const first = (description || '').split(/\n\s*\n/)[0].trim();
+  if (first.length <= 240) return first;
+  return first.slice(0, 237).trimEnd() + '…';
+}
+
+function fromPartiful(r: PartifulRecord): MahjongEvent {
+  return {
+    id: r.id,
+    title: r.title,
+    date: r.date,
+    time: r.time,
+    venue: r.venue || 'Address shared when you RSVP',
+    neighborhood: 'Seattle',
+    blurb: cardBlurb(r.description),
+    status: 'open',
+    level: 'All levels',
+    cadence: '',
+    rsvpUrl: r.rsvpUrl,
+    image: r.image || undefined,
+    timezone: r.timezone,
+  };
+}
+
+const partifulEvents: MahjongEvent[] = (generatedEvents as PartifulRecord[]).map(
+  fromPartiful
+);
+const hasRealEvents = partifulEvents.length > 0;
+
+// ---------------------------------------------------------------------------
+// Source 2 — built-in standing cadence (fallback when no Partiful links yet)
+// ---------------------------------------------------------------------------
 
 interface Slot {
   key: string;
@@ -65,6 +133,12 @@ function toISO(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
+function todayISO(): string {
+  const t = new Date();
+  t.setHours(0, 0, 0, 0);
+  return toISO(t);
+}
+
 function upcomingDates(anchorISO: string, count: number): string[] {
   const [ay, am, ad] = anchorISO.split('-').map(Number);
   const cursor = new Date(ay, am - 1, ad);
@@ -97,32 +171,52 @@ function eventFromSlot(slot: Slot, date: string): MahjongEvent {
   };
 }
 
-export const events: MahjongEvent[] = SLOTS.flatMap((slot) =>
+const syntheticEvents: MahjongEvent[] = SLOTS.flatMap((slot) =>
   upcomingDates(slot.anchor, UPCOMING_PER_SLOT).map((date) =>
     eventFromSlot(slot, date)
   )
+);
+
+// ---------------------------------------------------------------------------
+// The public calendar — real events win; else the standing cadence.
+// Real past events are hidden from the calendar but still resolvable by id
+// (below) so a shared poster/RSVP link to a just-passed night still works.
+// ---------------------------------------------------------------------------
+
+const TODAY = todayISO();
+
+export const events: MahjongEvent[] = (hasRealEvents
+  ? partifulEvents.filter((e) => e.date >= TODAY)
+  : syntheticEvents
 ).sort((a, b) => a.date.localeCompare(b.date));
+
+// ---------------------------------------------------------------------------
+// Poster permalinks (/event/[id]) — resolve an id back to its event.
+// ---------------------------------------------------------------------------
 
 const SLOT_BY_KEY: Record<string, Slot> = Object.fromEntries(
   SLOTS.map((s) => [s.key, s])
 );
+const PARTIFUL_BY_ID: Record<string, MahjongEvent> = Object.fromEntries(
+  partifulEvents.map((e) => [e.id, e])
+);
 
-// Resolve an event id (e.g. 'thu-2026-07-09') back to its full event by parsing
-// the encoded date and looking up its slot. The id carries the date, so the
-// per-event poster permalink (/event/[id]) can render ANY night without relying
-// on the runtime "upcoming" window — robust to the rolling 14-day cadence.
+// Resolve an event id back to its full event. Real Partiful ids match directly;
+// synthetic ids (e.g. 'thu-2026-07-09') encode their slot + date, so a permalink
+// renders its own content without relying on the runtime "upcoming" window.
 export function eventFromId(id: string): MahjongEvent | null {
+  if (PARTIFUL_BY_ID[id]) return PARTIFUL_BY_ID[id];
   const m = id.match(/^([a-z]+)-(\d{4}-\d{2}-\d{2})$/);
   if (!m) return null;
   const slot = SLOT_BY_KEY[m[1]];
   return slot ? eventFromSlot(slot, m[2]) : null;
 }
 
-// A wide window of event ids for static generation of the poster permalinks
-// (output: 'export' must enumerate them at build time). Deliberately generous —
-// ~15 months per slot — so every link the live calendar can produce stays valid
-// well past a deploy. Each deploy refreshes the window.
+// The set of ids to statically generate poster pages for (output: 'export' must
+// enumerate them at build time). Real events: every scraped night (past too, so
+// links stay valid). Fallback: a generous ~15-month window per slot.
 export function eventPosterParams(): { id: string }[] {
+  if (hasRealEvents) return partifulEvents.map((e) => ({ id: e.id }));
   const STEPS = 40; // ~15 months at the 14-day cadence
   const out: { id: string }[] = [];
   for (const slot of SLOTS) {

@@ -90,7 +90,9 @@ export default function EventPoster({
             {event.title}
           </p>
           <p className="mt-[1.6cqi] text-[3cqi] leading-snug text-white/80">
-            {event.neighborhood} · {event.cadence}
+            {event.cadence
+              ? `${event.neighborhood} · ${event.cadence}`
+              : event.neighborhood}
           </p>
         </div>
 

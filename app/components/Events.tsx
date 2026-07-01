@@ -104,9 +104,11 @@ export default function Events() {
                   <span className="hidden md:inline">{weekday} · </span>
                   {ev.time} · {ev.venue}, {ev.neighborhood} · {ev.level}
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-sage-deep/80">
-                  {ev.cadence}
-                </p>
+                {ev.cadence && (
+                  <p className="mt-1 text-xs uppercase tracking-[0.16em] text-sage-deep/80">
+                    {ev.cadence}
+                  </p>
+                )}
                 <p className="mt-3 max-w-prose leading-relaxed text-mist">
                   {ev.blurb}
                 </p>

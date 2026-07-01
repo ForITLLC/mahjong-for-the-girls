@@ -1,0 +1,14 @@
+# Caroline's Partiful event links — the source of truth for the live calendar.
+#
+# Partiful does NOT publish a host's event list anywhere public (not on the
+# profile page, not via any API, not in Google) — the ONLY public handle to a
+# specific event is the invite link Caroline shares. So paste her event links
+# here, one per line, and every deploy re-scrapes them into the site calendar.
+#
+# Format: one full URL per line. Blank lines and #-comments are ignored.
+#   https://partiful.com/e/XXXXXXXXXXXXXXXX
+#
+# To refresh: add/remove lines here, then `npm run scrape` (runs automatically
+# on every build) and redeploy. Non-public or unpublished events are skipped.
+#
+# --- Caroline's events (paste below) ---

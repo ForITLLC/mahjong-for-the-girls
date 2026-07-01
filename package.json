@@ -5,6 +5,8 @@
   "description": "Mahjong for the Girls — Caroline Dudeck's launch site curating mahjong for women in Seattle.",
   "scripts": {
     "dev": "next dev",
+    "scrape": "node scripts/scrape-partiful.mjs",
+    "prebuild": "node scripts/scrape-partiful.mjs || true",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
