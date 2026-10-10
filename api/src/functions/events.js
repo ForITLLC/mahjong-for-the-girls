@@ -1,5 +1,6 @@
 // Events API (Azure SQL).
-//   GET    /api/events             — PUBLIC. The visible list the website reads.
+//   GET    /api/events             — PUBLIC. The visible rows (the site reads
+//                                     /api/calendar, which layers these first).
 //   GET    /api/admin/events       — authenticated + allowlisted. Every event.
 //   POST   /api/admin/events       — authenticated + allowlisted. Upsert one.
 //   DELETE /api/admin/events?id=…  — authenticated + allowlisted. Remove one.
@@ -10,32 +11,7 @@
 
 const { app } = require('@azure/functions');
 const { sql, configured, pool, authorize, json, notConfigured, forbidden } = require('../db');
-
-function rowToEvent(r) {
-  return {
-    id: r.id,
-    title: r.title ?? '',
-    date: r.date ?? '',
-    time: r.time ?? '',
-    venue: r.venue ?? '',
-    neighborhood: r.neighborhood ?? '',
-    blurb: r.blurb ?? '',
-    status: r.status ?? 'open',
-    level: r.level ?? 'All levels',
-    cadence: r.cadence ?? 'One-off',
-    hidden: !!r.hidden,
-  };
-}
-
-async function listEvents(onlyVisible) {
-  const p = await pool();
-  const where = onlyVisible ? 'WHERE hidden = 0' : '';
-  const r = await p
-    .request()
-    .query(`SELECT id, title, date, time, venue, neighborhood, blurb, status, level, cadence, hidden
-            FROM dbo.events ${where} ORDER BY date ASC`);
-  return r.recordset.map(rowToEvent);
-}
+const { listEvents, rowToEvent } = require('../calendar');
 
 // Public read — only the visible events.
 app.http('eventsPublic', {
