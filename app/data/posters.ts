@@ -34,7 +34,6 @@ export const posters: Poster[] = [
     tagline: 'Mahjong margaritas, poolside tiles.',
     image: '/img/posters/bg/summer-2026.png',
     accent: '#ec2a8c',
-    current: true,
   },
   {
     id: 'disco',
@@ -51,6 +50,7 @@ export const posters: Poster[] = [
     tagline: 'A walk on the wild side.',
     image: '/img/posters/bg/wild.png',
     accent: '#aee04a',
+    current: true,
   },
   {
     id: 'brunch',

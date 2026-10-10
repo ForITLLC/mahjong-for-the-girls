@@ -8,10 +8,16 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
+  # Rebuild daily so the build-time calendar (Partiful scrape + standing
+  # cadence) never goes stale. 08:23 UTC is after midnight in Seattle all year
+  # (00:23 PST / 01:23 PDT), so the runner's UTC "today" matches Caroline's.
+  schedule:
+    - cron: '23 8 * * *'
+  workflow_dispatch:
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
