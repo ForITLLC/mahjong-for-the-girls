@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { events, type MahjongEvent } from '../data/events';
+import type { MahjongEvent } from '../data/events';
 
 // Our on-page RSVP modal. Mounted once on the page; opens when any RsvpButton
 // dispatches an 'open-rsvp' event with the event id. The visitor picks a
@@ -51,8 +51,9 @@ export default function Rsvp() {
   // Open on the custom event; reset the form each time.
   useEffect(() => {
     const onOpen = (e: Event) => {
-      const id = (e as CustomEvent<{ eventId?: string }>).detail?.eventId;
-      const found = events.find((x) => x.id === id) ?? null;
+      // The button hands over the whole event: the list comes from /api/calendar,
+      // so there is no build-time list to look an id up in.
+      const found = (e as CustomEvent<{ event?: MahjongEvent }>).detail?.event ?? null;
       if (!found) return;
       setEv(found);
       setChoice(null);

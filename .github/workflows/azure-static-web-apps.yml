@@ -8,16 +8,12 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
-  # Rebuild daily so the build-time calendar (Partiful scrape + standing
-  # cadence) never goes stale. 08:23 UTC is after midnight in Seattle all year
-  # (00:23 PST / 01:23 PDT), so the runner's UTC "today" matches Caroline's.
-  schedule:
-    - cron: '23 8 * * *'
-  workflow_dispatch:
+  # Deploys run on push and PRs only: no scheduled rebuild (ADR 0005 D2). The
+  # calendar stays current because /api/calendar resolves it at request time.
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
@@ -34,7 +30,7 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations ######
           app_location: "/"        # App source code path
-          api_location: "api"      # SWA-managed Functions: events editor + CRM
+          api_location: "api"      # SWA-managed Functions: calendar, events editor + CRM
           output_location: "out"   # Next.js static export output
           ###### End of Repository/Build Configurations ######
 

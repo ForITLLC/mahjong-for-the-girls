@@ -27,7 +27,7 @@ export default function RsvpButton({ ev }: { ev: MahjongEvent }) {
 
   const onClick = () => {
     window.dispatchEvent(
-      new CustomEvent('open-rsvp', { detail: { eventId: ev.id } })
+      new CustomEvent('open-rsvp', { detail: { eventId: ev.id, event: ev } })
     );
   };
 
